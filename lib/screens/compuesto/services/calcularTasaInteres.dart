@@ -1,5 +1,6 @@
 import 'package:intl/intl.dart';
 import 'dart:math';
+
 class InterestCalculator {
   double calculateTasaInteres({
     required double capital,
@@ -10,10 +11,10 @@ class InterestCalculator {
   }) {
     final double time = endDate.difference(startDate).inDays / 365;
     print(time);
-    return (vecesporano * (pow(montofuturo/capital, (1/(vecesporano*time)))-1))*100;
+    return (pow(montofuturo / capital, (1 / time)) - 1) * 100;
   }
 
- double calculateInterestRate({
+  double calculateInterestRate({
     required double futureAmount,
     required double capital,
     required DateTime startDate,

@@ -1,5 +1,6 @@
 import 'package:intl/intl.dart';
 import 'dart:math';
+
 class MontofuturoCalcular {
   double calculateFutureAmount({
     required double capital,
@@ -8,12 +9,36 @@ class MontofuturoCalcular {
     required int vecesporano,
     required DateTime endDate,
   }) {
-    final double time = endDate.difference(startDate).inDays / 365;
-    print(time.floor());
-    return capital * pow((1 + (rate / vecesporano)), (time*vecesporano));
+    // CORRECCIÓN 1: Para asegurar que la tasa se maneje correctamente
+    // Si la tasa viene como 0.02 desde la interfaz, no dividimos
+    // Si viene como 2.0, entonces sí dividimos por 100
+    final double tasaDecimal = rate >= 1 ? rate / 100 : rate;
+
+    // CORRECCIÓN 2: Usamos directamente el valor del meses que viene desde la interfaz
+    // o aseguramos que el cálculo sea correcto sin restar uno
+    int meses = ((endDate.year - startDate.year) * 12) +
+        endDate.month -
+        startDate.month;
+
+    // Eliminamos la condición que resta un mes
+    // if (endDate.day < startDate.day) {
+    //   meses--;
+    // }
+
+    print('Capital: $capital');
+    print('Tasa original: $rate');
+    print('Tasa decimal corregida: $tasaDecimal');
+    print('Meses calculados: $meses');
+    print('Fórmula: $capital * (1 + $tasaDecimal)^$meses');
+
+    // Fórmula correcta: MC = Capital * (1 + tasa)^n
+    double resultado = capital * pow((1 + tasaDecimal), meses);
+    print('Resultado: $resultado');
+
+    return resultado;
   }
 
- double calculateInterestRate({
+  double calculateInterestRate({
     required double futureAmount,
     required double capital,
     required DateTime startDate,
