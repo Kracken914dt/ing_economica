@@ -14,6 +14,8 @@ import 'package:ingeconomica/screens/inflacion/view/inflacion.dart';
 import 'package:ingeconomica/screens/simple/services/interes_calculator.dart';
 import 'package:ingeconomica/screens/simple/view/simple_view.dart';
 import 'package:ingeconomica/screens/tir/view/tir_form.dart';
+import 'package:ingeconomica/screens/Anualidades/views/anualidades_screen.dart';
+
 
 class HomeScreen extends StatefulWidget {
   final String username;
@@ -127,6 +129,7 @@ class _HomeScreenState extends State<HomeScreen> {
       TIRView(),
       const UnidadValorRealView(),
       const EvaluacionAlternativaInversionView(),
+      buildGridItem(context, "Anualidades", Colors.purple, Icons.calendar_today, 11),
     ];
 
     return WillPopScope(
@@ -196,14 +199,15 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 buildGridItem(context, "I. Simple", Colors.blue, Icons.attach_money_outlined, 1),
                 buildGridItem(context, "I. Compuesto", Colors.orange, Icons.trending_up, 2),
+                buildGridItem(context, "Anualidades", Colors.purple, Icons.calendar_today, 11),
                 // buildGridItem(context, "G. Geométrico", Icons.pie_chart, 3),
                 // buildGridItem(context, "G. Aritmético", Icons.calculate, 4),
-                // buildGridItem(context, "Amortización", Icons.history, 5),
-                // buildGridItem(context, "Bonos", Icons.attach_money, 6),
+                //buildGridItem(context, "Amortización", Colors.red ,Icons.history, 5),
+                //buildGridItem(context, "Bonos",Colors.green, Icons.attach_money, 3),
                 // buildGridItem(context, "Inflación", Icons.trending_down, 7),
-                // buildGridItem(context, "TIR", Icons.trending_up, 8),
-                // buildGridItem(context, "U.V.R", Icons.monetization_on_outlined, 9),
-                // buildGridItem(context, "E.A.I", Icons.account_balance_outlined, 10),
+                //buildGridItem(context, "TIR",Colors.green ,Icons.trending_up, 8),
+                //buildGridItem(context, "U.V.R", Colors.green ,Icons.monetization_on_outlined, 9),
+                //buildGridItem(context, "E.A.I", Colors.green ,Icons.account_balance_outlined, 10),
               ],
             ),
           ),
@@ -420,7 +424,14 @@ Widget buildServiciosScreen() {
   Widget buildGridItem(BuildContext context, String title, Color iconColor, IconData icon, int optionIndex) {
     return GestureDetector(
       onTap: () {
-        _onOptionTapped(optionIndex); // Change selected option
+        if (optionIndex == 11) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => AnualidadesScreen()),
+          );
+        } else {
+          _onOptionTapped(optionIndex); // Change selected option
+        }
       },
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
