@@ -70,6 +70,7 @@ class _Tiempo extends State<Tiempo> {
       appBar: AppBar(
         title: const Text("Cálculo del Tiempo"),
         centerTitle: true,
+        backgroundColor: Colors.teal,
       ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
@@ -84,8 +85,9 @@ class _Tiempo extends State<Tiempo> {
                 decoration: InputDecoration(
                   labelText: "Capital Inicial",
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0),
+                    borderRadius: BorderRadius.circular(10.0),
                   ),
+                  prefixIcon: const Icon(Icons.attach_money),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -99,17 +101,16 @@ class _Tiempo extends State<Tiempo> {
                 width: double.infinity,
                 decoration: BoxDecoration(
                   color: const Color(0xFFFEF7FF),
-                  borderRadius: BorderRadius.circular(30),
+                  borderRadius: BorderRadius.circular(10),
                   border: Border.all(
-                    color: Colors.grey, // Color del borde
-                    width: 1, // Ancho del borde
+                    color: Colors.grey,
+                    width: 1,
                   ),
                 ),
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<String>(
-                    isExpanded:
-                        true, // Permite que el DropdownButton ocupe todo el ancho disponible
+                    isExpanded: true,
                     value: frecuenciaSeleccionada,
                     onChanged: (String? nuevoValor) {
                       setState(() {
@@ -133,8 +134,9 @@ class _Tiempo extends State<Tiempo> {
                 decoration: InputDecoration(
                   labelText: "Monto Futuro",
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0),
+                    borderRadius: BorderRadius.circular(10.0),
                   ),
+                  prefixIcon: const Icon(Icons.attach_money),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -148,14 +150,15 @@ class _Tiempo extends State<Tiempo> {
                 controller: _rateController,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
-                  labelText: "Tasa de interes %",
+                  labelText: "Tasa de Interés (%)",
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0),
+                    borderRadius: BorderRadius.circular(10.0),
                   ),
+                  prefixIcon: const Icon(Icons.percent),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Por favor ingrese el monto futuro';
+                    return 'Por favor ingrese la tasa de interés';
                   }
                   return null;
                 },
@@ -167,45 +170,42 @@ class _Tiempo extends State<Tiempo> {
                   onPressed: _calculateFutureAmount,
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.all(20),
-                    backgroundColor: const Color(0xFF232323),
+                    backgroundColor: Colors.teal,
                     foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
                   child: const Text("Calcular Tiempo"),
                 ),
               ),
               const SizedBox(height: 20),
               if (_futureAmount != null)
-                SizedBox(
-                  width: double.infinity,
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF232323),
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          const Icon(
-                            Icons.monetization_on,
-                            color: Colors.white,
-                            size: 26,
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                              child: Center(
+                Card(
+                  elevation: 4,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        const Icon(
+                          Icons.monetization_on,
+                          color: Colors.teal,
+                          size: 26,
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Center(
                             child: Text(
                               "Tiempo necesario: ${_calculator.formatNumber(_futureAmount!)} años",
                               style: const TextStyle(
                                 fontSize: 18,
-                                color: Colors.white,
+                                color: Colors.teal,
                               ),
                             ),
-                          )),
-                        ],
-                      ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),

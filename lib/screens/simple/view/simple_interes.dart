@@ -93,65 +93,157 @@ class _SimpleInteresState extends State<SimpleInteres> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Tasa de Interés'),
+        backgroundColor: Colors.teal,
+        centerTitle: true,
       ),
-      body: Center(
+      body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(20.0),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildTextField(_futureAmountController, 'Monto Futuro'),
-              const SizedBox(height: 24),
-              _buildTextField(_initialCapitalController, 'Capital Inicial'),
-              const SizedBox(height: 24),
-              _buildTextField(_interesGenradoController, 'interes generado'),
-              const SizedBox(height: 24),
-              _buildDateOptions(), // Muestra las opciones para ingresar fechas o tiempo
-              const SizedBox(height: 24),
+              Card(
+                elevation: 4,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Datos del Capital',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.teal,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      _buildTextField(
+                        _futureAmountController, 
+                        'Monto Futuro',
+                        prefixIcon: Icons.attach_money,
+                      ),
+                      const SizedBox(height: 16),
+                      _buildTextField(
+                        _initialCapitalController, 
+                        'Capital Inicial',
+                        prefixIcon: Icons.attach_money,
+                      ),
+                      const SizedBox(height: 16),
+                      _buildTextField(
+                        _interesGenradoController, 
+                        'Interés Generado',
+                        prefixIcon: Icons.percent,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Card(
+                elevation: 4,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Período de Tiempo',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.teal,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      SwitchListTile(
+                        title: const Text("¿Conoces las fechas exactas?"),
+                        value: _useExactDates,
+                        activeColor: Colors.teal,
+                        onChanged: (bool value) {
+                          setState(() {
+                            _useExactDates = value;
+                          });
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      if (_useExactDates)
+                        Column(
+                          children: [
+                            _buildDateField(
+                              _startDateController,
+                              "Fecha de Inicio",
+                              Icons.calendar_today,
+                            ),
+                            const SizedBox(height: 16),
+                            _buildDateField(
+                              _endDateController,
+                              "Fecha de Fin",
+                              Icons.calendar_today,
+                            ),
+                          ],
+                        )
+                      else
+                        Column(
+                          children: [
+                            _buildTextField(
+                              _dayController,
+                              'Número de días',
+                              prefixIcon: Icons.calendar_today,
+                            ),
+                            const SizedBox(height: 16),
+                            _buildTextField(
+                              _monthController,
+                              'Número de meses',
+                              prefixIcon: Icons.calendar_today,
+                            ),
+                            const SizedBox(height: 16),
+                            _buildTextField(
+                              _yearController,
+                              'Número de años',
+                              prefixIcon: Icons.calendar_today,
+                            ),
+                          ],
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: _calculateInterestRate,
                   style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.all(20),
-                    backgroundColor: const Color(0xFF232323),
-                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.teal,
+                    padding: const EdgeInsets.symmetric(vertical: 15),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
-                  child: const Text("Calcular Tasa de Interés"),
+                  child: const Text(
+                    "Calcular Tasa de Interés",
+                    style: TextStyle(fontSize: 16),
+                  ),
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 20),
               if (_interestRate != null)
-                SizedBox(
-                  width: double.infinity,
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF232323),
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          const Icon(
-                            Icons.monetization_on,
-                            color: Colors.white,
-                            size: 26,
+                Card(
+                  elevation: 4,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      children: [
+                        Text(
+                          'Tasa de Interés: ${_interestRate!.toStringAsFixed(2)}%',
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.teal,
                           ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                              child: Center(
-                            child: Text(
-                              'Tasa de Interés: ${_interestRate!.toStringAsFixed(2)}%',
-                              style: const TextStyle(
-                                fontSize: 18,
-                                color: Colors.white,
-                              ),
-                            ),
-                          )),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -162,71 +254,37 @@ class _SimpleInteresState extends State<SimpleInteres> {
     );
   }
 
-  Widget _buildTextField(TextEditingController controller, String label) {
+  Widget _buildTextField(
+    TextEditingController controller,
+    String label, {
+    IconData? prefixIcon,
+  }) {
     return TextField(
       controller: controller,
       decoration: InputDecoration(
         labelText: label,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30.0),
+          borderRadius: BorderRadius.circular(10.0),
         ),
+        prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
       ),
       keyboardType: TextInputType.number,
     );
   }
 
-  Widget _buildDateOptions() {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text("¿Conoces las fechas exactas?"),
-            Switch(
-              value: _useExactDates,
-              onChanged: (bool value) {
-                setState(() {
-                  _useExactDates = value;
-                });
-              },
-            ),
-          ],
-        ),
-        const SizedBox(height: 16),
-        if (_useExactDates)
-          Column(
-            children: [
-              _buildDateField(_startDateController, "Fecha de Inicio",
-                  Icons.calendar_today),
-              const SizedBox(height: 24),
-              _buildDateField(
-                  _endDateController, "Fecha de Fin", Icons.calendar_today),
-            ],
-          )
-        else
-          Column(
-            children: [
-              _buildTextField(_dayController, 'Número de días'),
-              const SizedBox(height: 24),
-              _buildTextField(_monthController, 'Número de meses'),
-              const SizedBox(height: 24),
-              _buildTextField(_yearController, 'Número de años'),
-            ],
-          ),
-      ],
-    );
-  }
-
   Widget _buildDateField(
-      TextEditingController controller, String label, IconData icon) {
+    TextEditingController controller,
+    String label,
+    IconData icon,
+  ) {
     return TextField(
       controller: controller,
       readOnly: true,
       decoration: InputDecoration(
         labelText: label,
-        prefixIcon: Icon(icon), // Agregar ícono al inicio del campo de texto
+        prefixIcon: Icon(icon),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30.0),
+          borderRadius: BorderRadius.circular(10.0),
         ),
       ),
       onTap: () {

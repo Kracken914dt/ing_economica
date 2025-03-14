@@ -83,6 +83,7 @@ class _MontofuturoState extends State<Montofuturo> {
       appBar: AppBar(
         title: const Text("Cálculo del Monto Futuro"),
         centerTitle: true,
+        backgroundColor: Colors.teal,
       ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
@@ -97,8 +98,9 @@ class _MontofuturoState extends State<Montofuturo> {
                 decoration: InputDecoration(
                   labelText: "Capital Inicial",
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0),
+                    borderRadius: BorderRadius.circular(10.0),
                   ),
+                  prefixIcon: const Icon(Icons.attach_money),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -112,17 +114,16 @@ class _MontofuturoState extends State<Montofuturo> {
                 width: double.infinity,
                 decoration: BoxDecoration(
                   color: const Color(0xFFFEF7FF),
-                  borderRadius: BorderRadius.circular(30),
+                  borderRadius: BorderRadius.circular(10),
                   border: Border.all(
-                    color: Colors.grey, // Color del borde
-                    width: 1, // Ancho del borde
+                    color: Colors.grey,
+                    width: 1,
                   ),
                 ),
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<String>(
-                    isExpanded:
-                        true, // Permite que el DropdownButton ocupe todo el ancho disponible
+                    isExpanded: true,
                     value: frecuenciaSeleccionada,
                     onChanged: (String? nuevoValor) {
                       setState(() {
@@ -146,8 +147,9 @@ class _MontofuturoState extends State<Montofuturo> {
                 decoration: InputDecoration(
                   labelText: "Tasa de Interés (%)",
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0),
+                    borderRadius: BorderRadius.circular(10.0),
                   ),
+                  prefixIcon: const Icon(Icons.percent),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -160,6 +162,7 @@ class _MontofuturoState extends State<Montofuturo> {
               SwitchListTile(
                 title: const Text("¿Conoce las fechas exactas del crédito?"),
                 value: _knowsExactDates,
+                activeColor: Colors.teal,
                 onChanged: (bool value) {
                   setState(() {
                     _knowsExactDates = value;
@@ -174,7 +177,7 @@ class _MontofuturoState extends State<Montofuturo> {
                   decoration: InputDecoration(
                     labelText: "Fecha de Inicio",
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30.0),
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
                     suffixIcon: IconButton(
                       icon: const Icon(Icons.calendar_today),
@@ -196,7 +199,7 @@ class _MontofuturoState extends State<Montofuturo> {
                   decoration: InputDecoration(
                     labelText: "Fecha de Finalización",
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30.0),
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
                     suffixIcon: IconButton(
                       icon: const Icon(Icons.calendar_today),
@@ -217,7 +220,7 @@ class _MontofuturoState extends State<Montofuturo> {
                   decoration: InputDecoration(
                     labelText: "Número de Días",
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30.0),
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
                 ),
@@ -228,7 +231,7 @@ class _MontofuturoState extends State<Montofuturo> {
                   decoration: InputDecoration(
                     labelText: "Número de Meses",
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30.0),
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
                 ),
@@ -239,7 +242,7 @@ class _MontofuturoState extends State<Montofuturo> {
                   decoration: InputDecoration(
                     labelText: "Número de Años",
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30.0),
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
                 ),
@@ -251,45 +254,42 @@ class _MontofuturoState extends State<Montofuturo> {
                   onPressed: _calculateFutureAmount,
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.all(20),
-                    backgroundColor: const Color(0xFF232323),
+                    backgroundColor: Colors.teal,
                     foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
                   child: const Text("Calcular Monto Futuro"),
                 ),
               ),
               const SizedBox(height: 20),
               if (_futureAmount != null)
-                SizedBox(
-                  width: double.infinity,
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF232323),
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          const Icon(
-                            Icons.monetization_on,
-                            color: Colors.white,
-                            size: 26,
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                              child: Center(
+                Card(
+                  elevation: 4,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        const Icon(
+                          Icons.monetization_on,
+                          color: Colors.teal,
+                          size: 26,
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Center(
                             child: Text(
                               "Monto Futuro: ${_calculator.formatNumber(_futureAmount!)}",
                               style: const TextStyle(
                                 fontSize: 18,
-                                color: Colors.white,
+                                color: Colors.teal,
                               ),
                             ),
-                          )),
-                        ],
-                      ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),

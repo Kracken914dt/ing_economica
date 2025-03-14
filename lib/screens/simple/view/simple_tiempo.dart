@@ -67,104 +67,159 @@ class _SimpleTiempoState extends State<SimpleTiempo> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Calcular Tiempo'),
+        backgroundColor: Colors.teal,
+        centerTitle: true,
       ),
-      body: Center(
+      body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(20.0),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildTextField(_interesPagadoController, 'Interes pagado'),
-              const SizedBox(height: 24),
-              _buildTextField(_initialCapitalController, 'Capital Inicial'),
-              const SizedBox(height: 24),
-              _buildTextField(_finalCapitalController, 'Capital Final'),
-              const SizedBox(height: 24),
-              _buildTextField(_interestRateController, 'Tasa de Interés (%)'),
-              const SizedBox(height: 24),
-              
-              // Dropdown para seleccionar la vista
-              DropdownButton<String>(
-                value: _selectedView,
-                items: const [
-                  DropdownMenuItem(
-                    value: 'Todos',
-                    child: Text('Todos'),
+              Card(
+                elevation: 4,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Datos del Capital',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.teal,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      _buildTextField(
+                        _interesPagadoController, 
+                        'Interés Pagado',
+                        prefixIcon: Icons.attach_money,
+                      ),
+                      const SizedBox(height: 16),
+                      _buildTextField(
+                        _initialCapitalController, 
+                        'Capital Inicial',
+                        prefixIcon: Icons.attach_money,
+                      ),
+                      const SizedBox(height: 16),
+                      _buildTextField(
+                        _finalCapitalController, 
+                        'Capital Final',
+                        prefixIcon: Icons.attach_money,
+                      ),
+                      const SizedBox(height: 16),
+                      _buildTextField(
+                        _interestRateController, 
+                        'Tasa de Interés (%)',
+                        prefixIcon: Icons.percent,
+                      ),
+                    ],
                   ),
-                  DropdownMenuItem(
-                    value: 'Años',
-                    child: Text('Años'),
-                  ),
-                  DropdownMenuItem(
-                    value: 'Meses',
-                    child: Text('Meses'),
-                  ),
-                  DropdownMenuItem(
-                    value: 'Días',
-                    child: Text('Días'),
-                  ),
-                ],
-                onChanged: (value) {
-                  setState(() {
-                    _selectedView = value!;
-                  });
-                },
+                ),
               ),
-              const SizedBox(height: 24),
-              
+              const SizedBox(height: 20),
+              Card(
+                elevation: 4,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Formato de Visualización',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.teal,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                            value: _selectedView,
+                            isExpanded: true,
+                            items: const [
+                              DropdownMenuItem(
+                                value: 'Todos',
+                                child: Text('Todos'),
+                              ),
+                              DropdownMenuItem(
+                                value: 'Años',
+                                child: Text('Años'),
+                              ),
+                              DropdownMenuItem(
+                                value: 'Meses',
+                                child: Text('Meses'),
+                              ),
+                              DropdownMenuItem(
+                                value: 'Días',
+                                child: Text('Días'),
+                              ),
+                            ],
+                            onChanged: (value) {
+                              setState(() {
+                                _selectedView = value!;
+                              });
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: _calculateTime,
                   style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.all(20),
-                    backgroundColor: const Color(0xFF232323),
-                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.teal,
+                    padding: const EdgeInsets.symmetric(vertical: 15),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
-                  child: const Text("Calcular Tiempo"),
+                  child: const Text(
+                    "Calcular Tiempo",
+                    style: TextStyle(fontSize: 16),
+                  ),
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 20),
               if (_time != null)
-                SizedBox(
-                  width: double.infinity,
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF232323),
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          const Icon(
-                            Icons.access_time,
-                            color: Colors.white,
-                            size: 26,
+                Card(
+                  elevation: 4,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      children: [
+                        Text(
+                          'Tiempo: ${_time!.toStringAsFixed(2)} años',
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.teal,
                           ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Center(
-                              child: Column(
-                                children: [
-                                  Text(
-                                    'Tiempo: ${_time!.toStringAsFixed(2)} años',
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  if (_time != null)
-                                    _buildTimeInSelectedView(),
-                                ],
-                              ),
-                            ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          _buildTimeText(),
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.teal,
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -175,54 +230,34 @@ class _SimpleTiempoState extends State<SimpleTiempo> {
     );
   }
 
-  /// Widget para mostrar el tiempo según la selección del usuario
-  Widget _buildTimeInSelectedView() {
+  String _buildTimeText() {
     final timeComponents = _convertTime(_time!);
     
     switch (_selectedView) {
       case 'Años':
-        return Text(
-          '${timeComponents['years']} años',
-          style: const TextStyle(
-            fontSize: 18,
-            color: Colors.white,
-          ),
-        );
+        return '${timeComponents['years']} años';
       case 'Meses':
-        return Text(
-          '${timeComponents['months']} meses',
-          style: const TextStyle(
-            fontSize: 18,
-            color: Colors.white,
-          ),
-        );
+        return '${timeComponents['months']} meses';
       case 'Días':
-        return Text(
-          '${timeComponents['days']} días',
-          style: const TextStyle(
-            fontSize: 18,
-            color: Colors.white,
-          ),
-        );
+        return '${timeComponents['days']} días';
       default:
-        return Text(
-          '${timeComponents['years']} años, ${timeComponents['months']} meses, ${timeComponents['days']} días',
-          style: const TextStyle(
-            fontSize: 18,
-            color: Colors.white,
-          ),
-        );
+        return '${timeComponents['years']} años, ${timeComponents['months']} meses, ${timeComponents['days']} días';
     }
   }
 
-  Widget _buildTextField(TextEditingController controller, String label) {
+  Widget _buildTextField(
+    TextEditingController controller,
+    String label, {
+    IconData? prefixIcon,
+  }) {
     return TextField(
       controller: controller,
       decoration: InputDecoration(
         labelText: label,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30.0),
+          borderRadius: BorderRadius.circular(10.0),
         ),
+        prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
       ),
       keyboardType: TextInputType.number,
     );

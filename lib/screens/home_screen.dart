@@ -218,31 +218,31 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget buildBalanceCard(InterestCalculator calculator) {
     return Card(
-      elevation: 8,
+      elevation: 10,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(20),
       ),
       child: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.teal[400]!, Colors.teal[200]!],
+            colors: [Colors.teal[500]!, Colors.teal[300]!],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(20),
         ),
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(24.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Icon(Icons.account_balance_wallet, size: 50, color: Colors.white),
+            const Icon(Icons.account_balance_wallet, size: 60, color: Colors.white),
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
                   '\$${calculator.formatNumber(currentAmount)}',
                   style: const TextStyle(
-                    fontSize: 28,
+                    fontSize: 32,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
@@ -251,7 +251,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 const Text(
                   'Saldo Actual',
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 18,
                     color: Colors.white,
                   ),
                 ),
@@ -407,14 +407,17 @@ Widget buildServiciosScreen() {
 
   Widget buildServiceCard(String title, IconData icon, VoidCallback onTap) {
     return Card(
-      elevation: 4,
-      margin: const EdgeInsets.symmetric(vertical: 8),
+      elevation: 6,
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ),
       child: ListTile(
         title: Text(
           title,
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.teal),
+          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.teal),
         ),
-        leading: Icon(icon, color: Colors.teal),
+        leading: Icon(icon, color: Colors.teal, size: 30),
         trailing: const Icon(Icons.arrow_forward, color: Colors.teal),
         onTap: onTap,
       ),
