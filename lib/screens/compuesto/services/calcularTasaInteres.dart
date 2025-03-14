@@ -9,9 +9,25 @@ class InterestCalculator {
     required DateTime startDate,
     required DateTime endDate,
   }) {
-    final double time = endDate.difference(startDate).inDays / 365;
-    print(time);
-    return (pow(montofuturo / capital, (1 / time)) - 1) * 100;
+    // Calculamos el número de meses entre las fechas
+    int meses = ((endDate.year - startDate.year) * 12) +
+        endDate.month -
+        startDate.month;
+
+    print('Capital: $capital');
+    print('Monto Futuro: $montofuturo');
+    print('Meses calculados: $meses');
+
+    // Fórmula correcta: i = ((MC / C) ^ (1/n)) - 1
+    double tasaMensual = (pow(montofuturo / capital, (1 / meses)) - 1);
+    double tasaPorcentaje = tasaMensual * 100;
+
+    print('Fórmula: ((${montofuturo} / ${capital}) ^ (1/${meses})) - 1');
+    print('Cálculo: (${montofuturo / capital} ^ ${1 / meses}) - 1');
+    print('Tasa mensual decimal: $tasaMensual');
+    print('Tasa mensual porcentaje: $tasaPorcentaje%');
+
+    return tasaPorcentaje;
   }
 
   double calculateInterestRate({
