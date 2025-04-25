@@ -66,112 +66,187 @@ class UnidadValorRealTablaState extends State<UnidadValorRealTabla> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Tabla de Unidad de Valor Real'),
+        centerTitle: true,
+        backgroundColor: Colors.teal,
       ),
-      body: Center(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.teal.withOpacity(0.1),
+              Colors.white,
+            ],
+          ),
+        ),
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(20.0),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if(_uVRAmount.isEmpty && _tablac == false) ...[
-              const SizedBox(height: 20),
-              buildTextField(_valorAController, 'Unidad de Valor Real Anterior'),
-              const SizedBox(height: 24),
-              buildTextField(_variationController, 'Variacion (%)'),
-              const SizedBox(height: 24),
-              TextFormField(
-                  controller: _startDateController,
-                  readOnly: true,
-                  decoration: InputDecoration(
-                    labelText: "Fecha de Inicio",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                    ),
-                    suffixIcon: IconButton(
-                      icon: const Icon(Icons.calendar_today),
-                      onPressed: () =>
-                          _selectDate(context, _startDateController),
+              if (_uVRAmount.isEmpty && _tablac == false) ...[
+                Card(
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Datos para el cálculo',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.teal,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        TextFormField(
+                          controller: _valorAController,
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            labelText: 'Unidad de Valor Real Anterior',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            prefixIcon: const Icon(Icons.attach_money),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        TextFormField(
+                          controller: _variationController,
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            labelText: 'Variación (%)',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            prefixIcon: const Icon(Icons.percent),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        TextFormField(
+                          controller: _startDateController,
+                          readOnly: true,
+                          decoration: InputDecoration(
+                            labelText: "Fecha de Inicio",
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            prefixIcon: const Icon(Icons.calendar_today),
+                            suffixIcon: IconButton(
+                              icon: const Icon(Icons.calendar_today),
+                              onPressed: () =>
+                                  _selectDate(context, _startDateController),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        TextFormField(
+                          controller: _endDateController,
+                          readOnly: true,
+                          decoration: InputDecoration(
+                            labelText: "Fecha de Finalización",
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            prefixIcon: const Icon(Icons.calendar_today),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor ingrese la fecha de inicio';
-                    }
-                    return null;
-                  },
                 ),
-                const SizedBox(height: 24),
-                TextFormField(
-                  controller: _endDateController,
-                  readOnly: true,
-                  decoration: InputDecoration(
-                    labelText: "Fecha de Finalización",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                    ),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor ingrese la fecha de finalización';
-                    }
-                    return null;
-                  },
-                ),             
-              const SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _calculateUVR,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.all(20),
-                    backgroundColor: const Color(0xFF232323),
-                    foregroundColor: Colors.white,
-                  ),
-                  child: const Text("Calcular Unidad de Valor Real"),
-                ),
-              ),]
-              else ...[
-                const SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    ElevatedButton(
-                      onPressed: _retornar,
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.all(20),
-                        backgroundColor: const Color(0xFF232323),
-                        foregroundColor: Colors.white,
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: _calculateUVR,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.teal,
+                      padding: const EdgeInsets.symmetric(vertical: 15),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                      child: const Text("Asignar otros valores"),
                     ),
-                    const SizedBox(height: 20,),
-                    Container(
-                      decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
-                      width: 350,
-                      height: 400,
-
-                      child: ListView(
-                        
-                      
-                        //width: double.infinity,
-                        //height: 400,
-                        children: [UVRTable(
-                          listaN: _uVRAmount.map((uVRAmount) => _uVRAmount.lastIndexOf(uVRAmount)+1).toList(), 
-                          listaF: _fechas.map((fecha) => _calculator.formatDate(fecha)).toList(), 
-                          listaUVR: _uVRAmount),
-                          ]/*Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                    child: const Text(
+                      "Calcular",
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ),
+                ),
+              ] else ...[
+                Column(
+                  children: [
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: _retornar,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.teal,
+                          padding: const EdgeInsets.symmetric(vertical: 15),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: const Text(
+                          "Asignar otros valores",
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Card(
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            ListaAmortizacion(titulo: 'N°', van: _uVRAmount.map((uVRAmount) => _uVRAmount.lastIndexOf(uVRAmount)+1).toList(), bSize: 10),
-                            ListaAmortizacion(titulo: 'Fecha', van: _fechas.map((fecha) => _calculator.formatDate(fecha)).toList(), bSize: 10),
-                            ListaAmortizacion(titulo: 'UVR', van: _uVRAmount, bSize: 10),
-                          ],),*/),
+                            const Text(
+                              'Tabla de Valores UVR',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.teal,
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey.shade300),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              height: 300,
+                              child: ListView(
+                                children: [
+                                  UVRTable(
+                                    listaN: _uVRAmount
+                                        .map((uVRAmount) =>
+                                            _uVRAmount.lastIndexOf(uVRAmount) + 1)
+                                        .toList(),
+                                    listaF: _fechas
+                                        .map((fecha) =>
+                                            _calculator.formatDate(fecha))
+                                        .toList(),
+                                    listaUVR: _uVRAmount,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ],
                 ),
-              ),
               ]
             ],
           ),

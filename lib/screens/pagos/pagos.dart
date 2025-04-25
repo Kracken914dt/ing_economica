@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:local_auth/local_auth.dart'; // Importa para autenticación biométrica
-import 'package:flutter_local_notifications/flutter_local_notifications.dart'; // Importa para notificaciones
+import 'package:local_auth/local_auth.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class Pagos extends StatefulWidget {
   final double saldoDisponible;
@@ -88,53 +88,130 @@ class _PagosState extends State<Pagos> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Pagar Cuota')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Saldo disponible: \$${widget.saldoDisponible.toStringAsFixed(2)}',
-                style: const TextStyle(fontSize: 24),
-              ),
-              const SizedBox(height: 20),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Cuota a pagar'),
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor, ingresa un monto';
-                  }
-                  if (double.tryParse(value) == null) {
-                    return 'Por favor, ingresa un número válido';
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  cuota = double.parse(value!);
-                },
-              ),
-              const SizedBox(height: 20),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Descripción del pago'),
-                onSaved: (value) {
-                  descripcion = value ?? '';
-                },
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _pagarCuota,
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.all(20),
-                  backgroundColor: const Color(0xFF232323),
-                  foregroundColor: Colors.white,
-                ),
-                child: const Text("Pagar"),
-              ),
+      appBar: AppBar(
+        title: const Text('Pagar Cuota'),
+        centerTitle: true,
+        backgroundColor: Colors.teal,
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.teal.withOpacity(0.1),
+              Colors.white,
             ],
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Card(
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Información de Pago',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.teal,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.teal.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(Icons.account_balance_wallet, color: Colors.teal),
+                              const SizedBox(width: 10),
+                              Text(
+                                'Saldo disponible: \$${widget.saldoDisponible.toStringAsFixed(2)}',
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        TextFormField(
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            labelText: 'Cuota a pagar',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            prefixIcon: const Icon(Icons.attach_money),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Por favor, ingresa un monto';
+                            }
+                            if (double.tryParse(value) == null) {
+                              return 'Por favor, ingresa un número válido';
+                            }
+                            return null;
+                          },
+                          onSaved: (value) {
+                            cuota = double.parse(value!);
+                          },
+                        ),
+                        const SizedBox(height: 16),
+                        TextFormField(
+                          decoration: InputDecoration(
+                            labelText: 'Descripción del pago',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            prefixIcon: const Icon(Icons.description),
+                          ),
+                          onSaved: (value) {
+                            descripcion = value ?? '';
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    icon: const Icon(Icons.payment),
+                    onPressed: _pagarCuota,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.teal,
+                      padding: const EdgeInsets.symmetric(vertical: 15),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    label: const Text(
+                      "Realizar Pago",
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

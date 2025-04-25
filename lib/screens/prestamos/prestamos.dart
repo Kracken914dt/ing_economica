@@ -82,144 +82,264 @@ class _LoanWidgetState extends State<LoanWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final double screenWidth = MediaQuery.of(context).size.width;
-
     return Scaffold(
-      appBar: AppBar(title: const Text('Préstamo')),
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                "Monto del préstamo:",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-              TextField(
-                controller: _amountController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  hintText: "Ingrese el monto del préstamo",
-                ),
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                "Tasa de interés (% anual):",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-              TextField(
-                controller: _rateController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  hintText: "Ingrese la tasa de interés",
-                ),
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                "Plazo (años):",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-              TextField(
-                controller: _termController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  hintText: "Ingrese el plazo del préstamo en años",
-                ),
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                "Tipo de interés:",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Flexible(
-                    child: Radio<String>(
-                      value: "simple",
-                      groupValue: _loanType,
-                      onChanged: (String? value) {
-                        setState(() {
-                          _loanType = value ?? "simple";
-                          if (_loanType == "simple" &&
-                              _amortizationType == "francesa") {
-                            _amortizationType =
-                                "alemana"; // Cambia a una opción válida
-                          }
-                        });
-                      },
-                    ),
-                  ),
-                  const Text("Interés Simple"),
-                  Flexible(
-                    child: Radio<String>(
-                      value: "compuesto",
-                      groupValue: _loanType,
-                      onChanged: (String? value) {
-                        setState(() {
-                          _loanType = value ?? "simple";
-                        });
-                      },
-                    ),
-                  ),
-                  const Text("Interés Compuesto"),
-                ],
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                "Tipo de amortización:",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-              DropdownButton<String>(
-                value: _amortizationType,
-                items: <String>['francesa', 'alemana', 'americana']
-                    .map((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value.capitalizeFirstOfEach),
-                  );
-                }).toList(),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    _amortizationType = newValue!;
-                  });
-                },
-              ),
-              const SizedBox(height: 20),
-              Center(
-                child: ElevatedButton(
-                  onPressed: _calculateLoan,
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: const Color(0xFF232323), // Color del texto
-                  ),
-                  child: const Text("Realizar Préstamo"),
-                ),
-              ),
-              const SizedBox(height: 20),
-              if (_monthlyPayments.isNotEmpty) ...[
-                const Text(
-                  "Pagos mensuales:",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                Column(
-                  children: _monthlyPayments.asMap().entries.map((entry) {
-                    int index = entry.key;
-                    double payment = entry.value;
-                    return Text(
-                      "Cuota ${index + 1}: \$${payment.toStringAsFixed(2)}",
-                      style: const TextStyle(fontSize: 16),
-                    );
-                  }).toList(),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  "Fecha de finalización: ${_endDate != null ? DateFormat('dd/MM/yyyy').format(_endDate!) : ''}",
-                  style: const TextStyle(fontSize: 16),
-                ),
-              ],
+      appBar: AppBar(
+        title: const Text('Préstamo'),
+        centerTitle: true,
+        backgroundColor: Colors.teal,
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.teal.withOpacity(0.1),
+              Colors.white,
             ],
+          ),
+        ),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Card(
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Datos del Préstamo',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.teal,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        TextFormField(
+                          controller: _amountController,
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            labelText: "Monto del Préstamo",
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            prefixIcon: const Icon(Icons.attach_money),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        TextFormField(
+                          controller: _rateController,
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            labelText: "Tasa de Interés Anual (%)",
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            prefixIcon: const Icon(Icons.percent),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        TextFormField(
+                          controller: _termController,
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            labelText: "Plazo (años)",
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            prefixIcon: const Icon(Icons.calendar_today),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        const Text(
+                          'Tipo de Interés',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: RadioListTile<String>(
+                                title: const Text("Simple"),
+                                value: "simple",
+                                groupValue: _loanType,
+                                activeColor: Colors.teal,
+                                onChanged: (String? value) {
+                                  setState(() {
+                                    _loanType = value ?? "simple";
+                                    if (_loanType == "simple" &&
+                                        _amortizationType == "francesa") {
+                                      _amortizationType = "alemana";
+                                    }
+                                  });
+                                },
+                              ),
+                            ),
+                            Expanded(
+                              child: RadioListTile<String>(
+                                title: const Text("Compuesto"),
+                                value: "compuesto",
+                                groupValue: _loanType,
+                                activeColor: Colors.teal,
+                                onChanged: (String? value) {
+                                  setState(() {
+                                    _loanType = value ?? "simple";
+                                  });
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                        const Text(
+                          'Tipo de Amortización',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton<String>(
+                              value: _amortizationType,
+                              isExpanded: true,
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  _amortizationType = newValue!;
+                                });
+                              },
+                              items: <String>['francesa', 'alemana', 'americana']
+                                  .map((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value.capitalizeFirstOfEach),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: _calculateLoan,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.teal,
+                      padding: const EdgeInsets.symmetric(vertical: 15),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    child: const Text(
+                      "Realizar Préstamo",
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                if (_monthlyPayments.isNotEmpty)
+                  Card(
+                    elevation: 4,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Detalle del Préstamo',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.teal,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          const Divider(),
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: _monthlyPayments.length > 6
+                                ? 6
+                                : _monthlyPayments.length,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 4.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "Cuota ${index + 1}:",
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    Text(
+                                      "\$${_monthlyPayments[index].toStringAsFixed(2)}",
+                                      style: const TextStyle(color: Colors.teal),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                          if (_monthlyPayments.length > 6) ...[
+                            const Divider(),
+                            Center(
+                              child: Text(
+                                "... y ${_monthlyPayments.length - 6} cuotas más",
+                                style: TextStyle(
+                                    color: Colors.grey.shade600, fontSize: 12),
+                              ),
+                            ),
+                          ],
+                          const Divider(),
+                          const SizedBox(height: 8),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                "Fecha de finalización:",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                _endDate != null
+                                    ? DateFormat('dd/MM/yyyy').format(_endDate!)
+                                    : '',
+                                style: const TextStyle(color: Colors.teal),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+              ],
+            ),
           ),
         ),
       ),

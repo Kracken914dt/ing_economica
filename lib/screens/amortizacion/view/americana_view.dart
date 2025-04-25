@@ -52,63 +52,192 @@ class _AmericaViewState extends State<AmericaView> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Cálculo de Amortización Americana'),
+        centerTitle: true,
+        backgroundColor: Colors.teal,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TextFormField(
-                controller: _principalController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(labelText: 'Monto del préstamo (Capital)'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor ingresa el monto del préstamo';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: _tasaController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(labelText: 'Tasa de interés anual (%)'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor ingresa la tasa de interés';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: _aniosController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(labelText: 'Duración del préstamo (años)'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor ingresa la duración del préstamo';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _calcularAmortizacion,
-                child: const Text('Calcular'),
-              ),
-              const SizedBox(height: 20),
-              if (_interesMensual != null) ...[
-                Text('Interés mensual: ${_interesMensual!.toStringAsFixed(2)}'),
-                Text('Total de intereses pagados: ${_totalIntereses!.toStringAsFixed(2)}'),
-                Text('Último pago (capital + interés): ${_ultimoPago!.toStringAsFixed(2)}'),
-                const SizedBox(height: 20),
-              ],
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.teal.withOpacity(0.1),
+              Colors.white,
             ],
           ),
         ),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Card(
+                    elevation: 4,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Datos del Préstamo',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.teal,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          TextFormField(
+                            controller: _principalController,
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                              labelText: 'Monto del Préstamo (Capital)',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              prefixIcon: const Icon(Icons.attach_money),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Por favor ingresa el monto del préstamo';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 16),
+                          TextFormField(
+                            controller: _tasaController,
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                              labelText: 'Tasa de Interés Anual (%)',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              prefixIcon: const Icon(Icons.percent),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Por favor ingresa la tasa de interés';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 16),
+                          TextFormField(
+                            controller: _aniosController,
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                              labelText: 'Duración del Préstamo (años)',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              prefixIcon: const Icon(Icons.calendar_today),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Por favor ingresa la duración del préstamo';
+                              }
+                              return null;
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: _calcularAmortizacion,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.teal,
+                        padding: const EdgeInsets.symmetric(vertical: 15),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: const Text(
+                        "Calcular",
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  if (_interesMensual != null)
+                    Card(
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Resultados',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.teal,
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            _buildResultRow(
+                              'Interés Mensual:',
+                              '\$${_interesMensual!.toStringAsFixed(2)}',
+                              Icons.payments,
+                            ),
+                            const SizedBox(height: 12),
+                            _buildResultRow(
+                              'Total de Intereses:',
+                              '\$${_totalIntereses!.toStringAsFixed(2)}',
+                              Icons.account_balance,
+                            ),
+                            const SizedBox(height: 12),
+                            _buildResultRow(
+                              'Último Pago (Capital + Interés):',
+                              '\$${_ultimoPago!.toStringAsFixed(2)}',
+                              Icons.monetization_on,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
+        ),
       ),
+    );
+  }
+
+  Widget _buildResultRow(String label, String value, IconData icon) {
+    return Row(
+      children: [
+        Icon(icon, color: Colors.teal),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Text(
+            label,
+            style: const TextStyle(fontSize: 16),
+          ),
+        ),
+        Text(
+          value,
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
     );
   }
 }

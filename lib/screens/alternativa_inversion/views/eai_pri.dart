@@ -17,173 +17,268 @@ class EvaluacionAlternativaInversionPRIARState extends State<EvaluacionAlternati
   String _anserdate = 'Mensual';
   String _answerText = 'P.R.I';
   List<double> fcaja = [];
-  final EAICalculator _calculator =
-      EAICalculator();
+  final EAICalculator _calculator = EAICalculator();
 
- String resultado(double invI){
-    return ((fcaja.reduce((value,element) => value+element) > invI)?'P.R:I':'P.R.I(Aprox)');
+  String resultado(double invI) {
+    return ((fcaja.reduce((value, element) => value + element) > invI) ? 'P.R:I' : 'P.R.I(Aprox)');
   }
+  
   void _calculateEAI() {
-      final double invInicial = double.parse(_valorIController.text);
-      setState(() {
-        _anserdate = _selectedOption3;
-        _answerText = resultado(invInicial);
-        _eAIResult = _calculator.calculatePRI(
-          fcaja: fcaja, 
-          invInicial: invInicial, 
-          tPerido: _selectedOption3);
-      });
+    final double invInicial = double.parse(_valorIController.text);
+    setState(() {
+      _anserdate = _selectedOption3;
+      _answerText = resultado(invInicial);
+      _eAIResult = _calculator.calculatePRI(
+        fcaja: fcaja, 
+        invInicial: invInicial, 
+        tPerido: _selectedOption3);
+    });
   }
 
-  void _addFlujoCaja(){
-    if(_valorFCController.text.isNotEmpty && double.parse(_valorFCController.text) > 0){
+  void _addFlujoCaja() {
+    if (_valorFCController.text.isNotEmpty && double.parse(_valorFCController.text) > 0) {
       setState(() {
         fcaja.add(double.parse(_valorFCController.text));
-        _valorFCController.text="";
+        _valorFCController.text = "";
       });
-      print(fcaja);
     }
   }
 
-  void _removeFlujoCaja(int caja){
+  void _removeFlujoCaja(int caja) {
     setState(() {
       fcaja.removeAt(caja);
     });
-    print(fcaja);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Calculadora de Periodo de Recuperación de inversión'),
+        title: const Text('Calculadora de Periodo de Recuperación de Inversión'),
+        centerTitle: true,
+        backgroundColor: Colors.teal,
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const SizedBox(height: 20),
-              buildTextField(_valorIController, 'Inversion Inicial'),
-              const SizedBox(height: 24),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                SizedBox(width: 300,child: buildTextField(_valorFCController, 'Flujo de caja')),
-                SizedBox(
-                child: ElevatedButton(
-                  onPressed: _addFlujoCaja,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.all(20),
-                    backgroundColor: const Color(0xFF232323),
-                    foregroundColor: Colors.white,
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.teal.withOpacity(0.1),
+              Colors.white,
+            ],
+          ),
+        ),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Card(
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
                   ),
-                  child: const Text("Añandir FC"),
-                ),
-              ),
-              ],),
-              if (fcaja.isNotEmpty) ... [
-              const SizedBox(height: 24),
-              Container(
-                decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
-                height: 60,
-                width: MediaQuery.of(context).size.width*0.6,
-                child: ListView.builder(
-                  itemCount: fcaja.length,
-                  itemBuilder: (context, index) {
-                    return Dismissible(
-                      key: ObjectKey(fcaja.length-index), 
-                      onDismissed: (direccion){_removeFlujoCaja(index);},
-                      child: Text('${fcaja[index]}',textAlign: TextAlign.center,style: const TextStyle(fontSize: 20),),
-                      );
-                  },
-                  ),
-              ),],
-              const SizedBox(height: 24),
-              Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFFEF7FF),
-                    borderRadius: BorderRadius.circular(30),
-                    border: Border.all(
-                      color: Colors.grey, // Color del borde
-                      width: 1, // Ancho del borde
-                    ),
-                  ),
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      isExpanded:
-                          true, // Permite que el DropdownButton ocupe todo el ancho disponible
-                      value: _selectedOption3,
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          _selectedOption3 = newValue!;
-                        });
-                      },
-                      items: <String>[
-                        'Mensual',
-                        'Anual',
-                      ].map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                ),
-              const SizedBox(height: 20),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _calculateEAI,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.all(20),
-                    backgroundColor: const Color(0xFF232323),
-                    foregroundColor: Colors.white,
-                  ),
-                  child: const Text("Calcular Periodo de Recuperación de inversión"),
-                ),
-              ),
-              const SizedBox(height: 24),
-              if (_eAIResult != null)
-                SizedBox(
-                  width: double.infinity,
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF232323),
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          const Icon(
-                            Icons.monetization_on,
-                            color: Colors.white,
-                            size: 26,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Datos de Inversión',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.teal,
                           ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                              child: Center(
-                            child: Text(
-                              '(E.A.I) $_answerText: ${_eAIResult!.toStringAsFixed(2)} ${(_anserdate == 'Mensual')?'Meses':'Años'}',
-                              style: const TextStyle(
-                                fontSize: 18,
-                                color: Colors.white,
+                        ),
+                        const SizedBox(height: 16),
+                        TextFormField(
+                          controller: _valorIController,
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            labelText: 'Inversión Inicial',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            prefixIcon: const Icon(Icons.attach_money),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                controller: _valorFCController,
+                                keyboardType: TextInputType.number,
+                                decoration: InputDecoration(
+                                  labelText: 'Flujo de Caja',
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  prefixIcon: const Icon(Icons.trending_up),
+                                ),
                               ),
                             ),
-                          )),
+                            const SizedBox(width: 10),
+                            ElevatedButton(
+                              onPressed: _addFlujoCaja,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.teal,
+                                padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                              child: const Icon(Icons.add),
+                            ),
+                          ],
+                        ),
+                        if (fcaja.isNotEmpty) ...[
+                          const SizedBox(height: 16),
+                          const Text(
+                            'Flujos de Caja Añadidos',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey.shade300),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            height: 70,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: fcaja.length,
+                              itemBuilder: (context, index) {
+                                return Dismissible(
+                                  key: ObjectKey(fcaja.length - index),
+                                  onDismissed: (direccion) {
+                                    _removeFlujoCaja(index);
+                                  },
+                                  child: Card(
+                                    color: Colors.teal.shade50,
+                                    margin: const EdgeInsets.all(5),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            '${fcaja[index]}',
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          const Text(
+                                            'Desliza para eliminar',
+                                            style: TextStyle(fontSize: 10),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                        const SizedBox(height: 16),
+                        const Text(
+                          'Periodo de Tiempo',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton<String>(
+                              value: _selectedOption3,
+                              isExpanded: true,
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  _selectedOption3 = newValue!;
+                                });
+                              },
+                              items: <String>[
+                                'Mensual',
+                                'Anual',
+                              ].map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: fcaja.isNotEmpty ? _calculateEAI : null,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.teal,
+                      padding: const EdgeInsets.symmetric(vertical: 15),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      disabledBackgroundColor: Colors.grey,
+                    ),
+                    child: const Text(
+                      "Calcular",
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                if (_eAIResult != null)
+                  Card(
+                    elevation: 4,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        children: [
+                          const Icon(
+                            Icons.event_available,
+                            color: Colors.teal,
+                            size: 40,
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            '(E.A.I) $_answerText: ${_eAIResult!.toStringAsFixed(2)} ${(_anserdate == 'Mensual') ? 'Meses' : 'Años'}',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.teal,
+                            ),
+                          ),
                         ],
                       ),
                     ),
                   ),
-                ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

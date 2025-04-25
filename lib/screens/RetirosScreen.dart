@@ -3,7 +3,7 @@ import 'package:local_auth/local_auth.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class RetirosScreen extends StatefulWidget {
-  final Function(double) onRetiroRealizado; // Callback for successful withdrawal
+  final Function(double) onRetiroRealizado;
 
   const RetirosScreen({super.key, required this.onRetiroRealizado});
 
@@ -60,10 +60,10 @@ class _RetirosScreenState extends State<RetirosScreen> {
       double cantidad = double.tryParse(cantidadStr) ?? 0;
 
       if (cantidad > 0) {
-        widget.onRetiroRealizado(cantidad); // Call the function passed from HomeScreen
+        widget.onRetiroRealizado(cantidad);
         _mostrarNotificacion(cantidadStr);
 
-        Navigator.pop(context); // Close the RetirosScreen after successful transaction
+        Navigator.pop(context);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Ingresa una cantidad válida')),
@@ -81,41 +81,85 @@ class _RetirosScreenState extends State<RetirosScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Retiros'),
+        centerTitle: true,
+        backgroundColor: Colors.teal,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'Confirma el monto a retirar:',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 20),
-            TextField(
-              controller: _montoController,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                labelText: 'Monto a retirar',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton.icon(
-              icon: const Icon(Icons.check),
-              onPressed: _retirarDinero,
-              label: const Text('Confirmar retiro'),
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 32.0, vertical: 16.0),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.teal.withOpacity(0.1),
+              Colors.white,
+            ],
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Card(
+                elevation: 4,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Retiro de Efectivo',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.teal,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      const Text(
+                        'Confirma el monto a retirar:',
+                        style: TextStyle(fontSize: 14, color: Colors.grey),
+                      ),
+                      const SizedBox(height: 16),
+                      TextFormField(
+                        controller: _montoController,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          labelText: 'Monto a retirar',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          prefixIcon: const Icon(Icons.attach_money),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+              const SizedBox(height: 20),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  icon: const Icon(Icons.check),
+                  onPressed: _retirarDinero,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.teal,
+                    padding: const EdgeInsets.symmetric(vertical: 15),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  label: const Text(
+                    "Confirmar Retiro",
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

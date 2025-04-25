@@ -47,118 +47,155 @@ class _FrancesaState extends State<Francesa> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Cálculo de Amortizacion Francesa"),
+        title: const Text("Cálculo de Amortización Francesa"),
         centerTitle: true,
+        backgroundColor: Colors.teal,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextFormField(
-                controller: _montoprestamo,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  labelText: "Monto del Prestamo",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                  ),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor ingrese el capital inicial';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 24),
-              const SizedBox(height: 24),
-              TextFormField(
-                controller: _tasaInteresAnual,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  labelText: "Tasa de Interés Anual (%)",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                  ),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor ingrese la tasa de interés';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-              TextFormField(
-                controller: _plazoMeses,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  labelText: "Ingrese el plazo en meses",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                  ),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor ingrese la tasa de interés';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-              const SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _calculateFutureAmount,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.all(20),
-                    backgroundColor: const Color(0xFF232323),
-                    foregroundColor: Colors.white,
-                  ),
-                  child: const Text("Calcular Amortizacion"),
-                ),
-              ),
-              const SizedBox(height: 20),
-              if (_futureAmount != null)
-                SizedBox(
-                  width: double.infinity,
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF232323),
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.teal.withOpacity(0.1),
+              Colors.white,
+            ],
+          ),
+        ),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Card(
+                    elevation: 4,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Icon(
-                            Icons.monetization_on,
-                            color: Colors.white,
-                            size: 26,
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                              child: Center(
-                            child: Text(
-                              "Amortizacion: ${_calculator.formatNumber(_futureAmount!)}",
-                              style: const TextStyle(
-                                fontSize: 18,
-                                color: Colors.white,
-                              ),
+                          const Text(
+                            'Datos del Préstamo',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.teal,
                             ),
-                          )),
+                          ),
+                          const SizedBox(height: 16),
+                          TextFormField(
+                            controller: _montoprestamo,
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                              labelText: "Monto del Préstamo",
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              prefixIcon: const Icon(Icons.attach_money),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Por favor ingrese el monto del préstamo';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 16),
+                          TextFormField(
+                            controller: _tasaInteresAnual,
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                              labelText: "Tasa de Interés Anual (%)",
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              prefixIcon: const Icon(Icons.percent),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Por favor ingrese la tasa de interés';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 16),
+                          TextFormField(
+                            controller: _plazoMeses,
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                              labelText: "Plazo en meses",
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              prefixIcon: const Icon(Icons.calendar_today),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Por favor ingrese el plazo en meses';
+                              }
+                              return null;
+                            },
+                          ),
                         ],
                       ),
                     ),
                   ),
-                ),
-            ],
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: _calculateFutureAmount,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.teal,
+                        padding: const EdgeInsets.symmetric(vertical: 15),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: const Text(
+                        "Calcular",
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  if (_futureAmount != null)
+                    Card(
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          children: [
+                            const Icon(
+                              Icons.monetization_on,
+                              color: Colors.teal,
+                              size: 40,
+                            ),
+                            const SizedBox(height: 12),
+                            Text(
+                              "Amortización: ${_calculator.formatNumber(_futureAmount!)}",
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.teal,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
           ),
         ),
       ),

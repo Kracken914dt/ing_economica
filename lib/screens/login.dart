@@ -13,6 +13,7 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   final TextEditingController _ccController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _forgotPasswordCCController = TextEditingController();
   final BiometricAuth _biometricAuth = BiometricAuth();
   bool _showPasswordLogin = false;
   bool _canCheckBiometrics = false;
@@ -62,6 +63,118 @@ class _LoginState extends State<Login> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Cédula o contraseña incorrecta")),
+      );
+    }
+  }
+
+  void _showForgotPasswordDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Recuperar Contraseña'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('Ingresa tu número de cédula para recuperar tu contraseña'),
+              const SizedBox(height: 16),
+              TextField(
+                controller: _forgotPasswordCCController,
+                decoration: InputDecoration(
+                  labelText: 'Cédula',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  prefixIcon: const Icon(Icons.credit_card),
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancelar'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                _recoverPassword();
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color.fromARGB(255, 21, 24, 26),
+                foregroundColor: Colors.white,
+              ),
+              child: const Text('Recuperar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _recoverPassword() async {
+    final String cc = _forgotPasswordCCController.text;
+    if (cc.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Por favor, ingresa tu cédula")),
+      );
+      return;
+    }
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? storedCC = prefs.getString('cedula');
+    String? storedPassword = prefs.getString('password');
+
+    if (cc == storedCC) {
+      Navigator.of(context).pop(); // Cerrar el diálogo actual
+      
+      // Mostrar el diálogo con la contraseña recuperada
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Contraseña Recuperada'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text('Tu contraseña es:'),
+                const SizedBox(height: 16),
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.teal.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: Colors.teal),
+                  ),
+                  child: Text(
+                    storedPassword ?? 'No disponible',
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            actions: [
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromARGB(255, 21, 24, 26),
+                  foregroundColor: Colors.white,
+                ),
+                child: const Text('Entendido'),
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("La cédula ingresada no está registrada")),
       );
     }
   }
@@ -150,7 +263,21 @@ class _LoginState extends State<Login> {
                     child: const Text("Iniciar Sesión"),
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton(
+                    onPressed: _showForgotPasswordDialog,
+                    child: const Text(
+                      "¿Olvidaste tu contraseña?",
+                      style: TextStyle(
+                        color: Colors.teal,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
                 SizedBox(
                   width: double.infinity,
                   child: TextButton(

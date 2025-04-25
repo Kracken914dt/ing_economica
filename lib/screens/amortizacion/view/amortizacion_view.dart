@@ -94,7 +94,7 @@ class AmortizacionView extends StatelessWidget {
       width: 280,
       height: 60,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(30),
+        borderRadius: BorderRadius.circular(15),
         gradient: LinearGradient(
           colors: [Colors.teal.shade700, Colors.teal],
         ),
@@ -114,7 +114,7 @@ class AmortizacionView extends StatelessWidget {
         label: Text(
           label,
           style: const TextStyle(
-            fontSize: 18,
+            fontSize: 16,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -123,9 +123,9 @@ class AmortizacionView extends StatelessWidget {
           foregroundColor: Colors.white,
           elevation: 0,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30),
+            borderRadius: BorderRadius.circular(15),
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 32),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
         ),
       ),
     );
