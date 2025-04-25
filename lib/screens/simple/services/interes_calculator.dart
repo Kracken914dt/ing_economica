@@ -79,7 +79,7 @@ class InterestCalculator {
     final tasa = rate / 100;
 
     final division = (1 + double.parse(tasa.toStringAsFixed(2)) * tiempo);
-    print('${finalCapital } / ${double.parse(division.toStringAsFixed(1))}');
+    print('${finalCapital} / ${double.parse(division.toStringAsFixed(1))}');
 
     final resultado = (finalCapital / division);
     return resultado;

@@ -6,8 +6,8 @@ class Bono {
   final double tasaCupon;
   final double tasaRendimiento;
   final int anos;
-  final int diasDevengados; 
-  final int periodoCupon; 
+  final int diasDevengados;
+  final int periodoCupon;
 
   Bono({
     required this.valorNominal,
@@ -27,7 +27,7 @@ class Bono {
     }
 
     precio += valorNominal / pow(1 + tasaRendimiento, anos);
-    
+
     return precio;
   }
 
@@ -40,8 +40,9 @@ class Bono {
       precioSucio += cupon / pow(1 + tasaRendimiento, i * periodoCupon / 360);
     }
 
-    precioSucio += valorNominal / pow(1 + tasaRendimiento, totalCupones * periodoCupon / 360);
-    
+    precioSucio += valorNominal /
+        pow(1 + tasaRendimiento, totalCupones * periodoCupon / 360);
+
     return precioSucio;
   }
 
@@ -65,24 +66,35 @@ class Bonos extends StatefulWidget {
 class _BonosState extends State<Bonos> {
   final TextEditingController _valorNominalController = TextEditingController();
   final TextEditingController _tasaCuponController = TextEditingController();
-  final TextEditingController _tasaRendimientoController = TextEditingController();
+  final TextEditingController _tasaRendimientoController =
+      TextEditingController();
   final TextEditingController _anosController = TextEditingController();
-  final TextEditingController _diasDevengadosController = TextEditingController();
-  final TextEditingController _periodoCuponController = TextEditingController(); 
+  final TextEditingController _diasDevengadosController =
+      TextEditingController();
+  final TextEditingController _periodoCuponController = TextEditingController();
 
   double _resultado = 0.0;
   String _opcionSeleccionada = 'Precio del Bono';
-  final List<String> _opciones = ['Precio del Bono', 'Precio Sucio', 'Interés Devengado', 'Precio Limpio'];
+  final List<String> _opciones = [
+    'Precio del Bono',
+    'Precio Sucio',
+    'Interés Devengado',
+    'Precio Limpio'
+  ];
 
   void _calcularValores() {
     final valorNominal = double.tryParse(_valorNominalController.text);
     final tasaCupon = double.tryParse(_tasaCuponController.text)! / 100;
-    final tasaRendimiento = double.tryParse(_tasaRendimientoController.text)! / 100;
+    final tasaRendimiento =
+        double.tryParse(_tasaRendimientoController.text)! / 100;
     final anos = int.tryParse(_anosController.text);
     final diasDevengados = int.tryParse(_diasDevengadosController.text);
     final periodoCupon = int.tryParse(_periodoCuponController.text);
 
-    if (valorNominal != null && anos != null && diasDevengados != null && periodoCupon != null) {
+    if (valorNominal != null &&
+        anos != null &&
+        diasDevengados != null &&
+        periodoCupon != null) {
       final bono = Bono(
         valorNominal: valorNominal,
         tasaCupon: tasaCupon,
@@ -114,94 +126,207 @@ class _BonosState extends State<Bonos> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-  appBar: AppBar(title: const Text('Calculo bonos')),
-      body: SingleChildScrollView( 
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            TextField(
-              controller: _valorNominalController,
-              decoration: const InputDecoration(
-                labelText: 'Valor Nominal del Bono () ',
-                border: OutlineInputBorder(),
+      appBar: AppBar(
+        title: const Text('Cálculo de Bonos'),
+        backgroundColor: Colors.teal,
+        centerTitle: true,
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.teal.withOpacity(0.1),
+              Colors.white,
+            ],
+          ),
+        ),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            children: [
+              Card(
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Center(
+                        child: Icon(
+                          Icons.account_balance,
+                          size: 48,
+                          color: Colors.teal,
+                        ),
+                      ),
+                      const Center(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 16.0),
+                          child: Text(
+                            "Cálculo de Bonos",
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.teal,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      _buildTextField(_valorNominalController,
+                          'Valor Nominal del Bono', Icons.attach_money),
+                      const SizedBox(height: 16),
+                      _buildTextField(_tasaCuponController, 'Tasa de Cupón (%)',
+                          Icons.percent),
+                      const SizedBox(height: 16),
+                      _buildTextField(
+                          _tasaRendimientoController,
+                          'Tasa de Rendimiento Requerida (%)',
+                          Icons.trending_up),
+                      const SizedBox(height: 16),
+                      _buildTextField(_anosController,
+                          'Años hasta el Vencimiento', Icons.calendar_today),
+                      const SizedBox(height: 16),
+                      _buildTextField(_diasDevengadosController,
+                          'Días Devengados', Icons.date_range),
+                      const SizedBox(height: 16),
+                      _buildTextField(_periodoCuponController,
+                          'Periodo del Cupón (días)', Icons.access_time),
+                      const SizedBox(height: 24),
+                      _buildDropdown(),
+                      const SizedBox(height: 24),
+                      Center(child: _buildCalculateButton()),
+                      const SizedBox(height: 24),
+                      _buildResultCard(),
+                    ],
+                  ),
+                ),
               ),
-              keyboardType: TextInputType.number,
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _tasaCuponController,
-              decoration: const InputDecoration(
-                labelText: 'Tasa de Cupon (%)',
-                border: OutlineInputBorder(),
-              ),
-              keyboardType: TextInputType.number,
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _tasaRendimientoController,
-              decoration: const InputDecoration(
-                labelText: 'Tasa de Rendimiento Requerida (%)',
-                border: OutlineInputBorder(),
-              ),
-              keyboardType: TextInputType.number,
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _anosController,
-              decoration: const InputDecoration(
-                labelText: 'Años hasta el Vencimiento',
-                border: OutlineInputBorder(),
-              ),
-              keyboardType: TextInputType.number,
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _diasDevengadosController,
-              decoration: const InputDecoration(
-                labelText: 'Días Devengados',
-                border: OutlineInputBorder(),
-              ),
-              keyboardType: TextInputType.number,
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _periodoCuponController,
-              decoration: const InputDecoration(
-                labelText: 'Periodo del Cupon (días)',
-                border: OutlineInputBorder(),
-              ),
-              keyboardType: TextInputType.number,
-            ),
-            const SizedBox(height: 16),
-            DropdownButton<String>(
-              value: _opcionSeleccionada,
-              items: _opciones.map((String opcion) {
-                return DropdownMenuItem<String>(
-                  value: opcion,
-                  child: Text(opcion),
-                );
-              }).toList(),
-              onChanged: (String? nuevaOpcion) {
-                setState(() {
-                  _opcionSeleccionada = nuevaOpcion!;
-                });
-              },
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _calcularValores,
-              child: const Text('Calcular'),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Resultado: ${_resultado.toStringAsFixed(2)}',
-              style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField(
+      TextEditingController controller, String label, IconData icon) {
+    return TextField(
+      controller: controller,
+      keyboardType: TextInputType.number,
+      decoration: InputDecoration(
+        labelText: label,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        prefixIcon: Icon(icon),
+      ),
+    );
+  }
+
+  Widget _buildDropdown() {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: const Color(0xFFFEF7FF),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: Colors.grey,
+          width: 1,
+        ),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          isExpanded: true,
+          value: _opcionSeleccionada,
+          items: _opciones.map((String opcion) {
+            return DropdownMenuItem<String>(
+              value: opcion,
+              child: Text(opcion),
+            );
+          }).toList(),
+          onChanged: (String? nuevaOpcion) {
+            setState(() {
+              _opcionSeleccionada = nuevaOpcion!;
+            });
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCalculateButton() {
+    return Container(
+      width: 280,
+      height: 60,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(30),
+        gradient: LinearGradient(
+          colors: [Colors.teal.shade700, Colors.teal],
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.teal.withOpacity(0.3),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: ElevatedButton.icon(
+        onPressed: _calcularValores,
+        icon: const Icon(Icons.calculate, size: 24),
+        label: const Text(
+          'Calcular',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.transparent,
+          foregroundColor: Colors.white,
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 32),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildResultCard() {
+    return Container(
+      width: double.infinity,
+      child: Card(
+        elevation: 4,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        color: Colors.teal.shade50,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('Resultado',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.teal,
+                  )),
+              const SizedBox(height: 10),
+              Text('\$${_resultado.toStringAsFixed(2)}',
+                  style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.teal.shade700,
+                  )),
+            ],
+          ),
         ),
       ),
     );

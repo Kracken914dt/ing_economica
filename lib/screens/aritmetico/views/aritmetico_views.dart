@@ -6,87 +6,133 @@ class AritmeticoView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                "Seleccione una opción",
-                style: TextStyle(fontSize: 20), // Tamaño de la fuente del texto
-              ),
-              const SizedBox(
-                  height: 24), // Separación entre el texto y los botones
-              SizedBox(
-                width: 250, // Ancho específico para todos los botones
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    Navigator.pushNamed(context, "/aritmetico/valorpresente");
-                  },
-                  icon: const Icon(Icons.calculate),
-                  label: const Text("Valor Presente"),
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 16, horizontal: 24),
-                    backgroundColor: const Color(0xFF232323), // Color del botón
-                    foregroundColor: Colors.white, // Color del texto e íconos
-                  ),
-                ),
-              ),
-              const SizedBox(height: 24),
-              SizedBox(
-                width: 250,
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    Navigator.pushNamed(context, "/aritmetico/valorfuturo");
-                  },
-                  icon: const Icon(Icons.view_timeline_rounded),
-                  label: const Text("Valor Futuro"),
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 16, horizontal: 24),
-                    backgroundColor: const Color(0xFF232323),
-                    foregroundColor: Colors.white,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 24),
-              SizedBox(
-                width: 250,
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    Navigator.pushNamed(context, "/aritmetico/valorpresenteinfinito");
-                  },
-                  icon: const Icon(Icons.loop_outlined),
-                  label: const Text("Valor Presente G.A Infinito"),
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 16, horizontal: 24),
-                    backgroundColor: const Color(0xFF232323),
-                    foregroundColor: Colors.white,
-                  ),
-                ),
-              ),
-              /*const SizedBox(height: 24),
-              SizedBox(
-                width: 250,
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    Navigator.pushNamed(context, "/aritmetico/cuotaespecifica");
-                  },
-                  icon: const Icon(Icons.manage_search_rounded),
-                  label: const Text("Cuota Especifica"),
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 16, horizontal: 24),
-                    backgroundColor: const Color(0xFF232323),
-                    foregroundColor: Colors.white,
-                  ),
-                ),
-              ),*/
+      appBar: AppBar(
+        title: const Text('Gradiente Aritmético'),
+        backgroundColor: Colors.teal,
+        centerTitle: true,
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.teal.withOpacity(0.1),
+              Colors.white,
             ],
           ),
+        ),
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Card(
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      children: [
+                        const Icon(
+                          Icons.stacked_line_chart,
+                          size: 48,
+                          color: Colors.teal,
+                        ),
+                        const SizedBox(height: 16),
+                        const Text(
+                          "Seleccione una opción",
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.teal,
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        _buildButton(
+                          context: context,
+                          icon: Icons.calculate,
+                          label: "Valor Presente",
+                          route: "/aritmetico/valorpresente",
+                        ),
+                        const SizedBox(height: 16),
+                        _buildButton(
+                          context: context,
+                          icon: Icons.view_timeline_rounded,
+                          label: "Valor Futuro",
+                          route: "/aritmetico/valorfuturo",
+                        ),
+                        const SizedBox(height: 16),
+                        _buildButton(
+                          context: context,
+                          icon: Icons.loop_outlined,
+                          label: "Valor Presente G.A Infinito",
+                          route: "/aritmetico/valorpresenteinfinito",
+                        ),
+                        /*const SizedBox(height: 16),
+                        _buildButton(
+                          context: context,
+                          icon: Icons.manage_search_rounded,
+                          label: "Cuota Específica",
+                          route: "/aritmetico/cuotaespecifica",
+                        ),*/
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildButton({
+    required BuildContext context,
+    required IconData icon,
+    required String label,
+    required String route,
+  }) {
+    return Container(
+      width: 280,
+      height: 60,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(30),
+        gradient: LinearGradient(
+          colors: [Colors.teal.shade700, Colors.teal],
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.teal.withOpacity(0.3),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: ElevatedButton.icon(
+        onPressed: () {
+          Navigator.pushNamed(context, route);
+        },
+        icon: Icon(icon, size: 24),
+        label: Text(
+          label,
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.transparent,
+          foregroundColor: Colors.white,
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 32),
         ),
       ),
     );
