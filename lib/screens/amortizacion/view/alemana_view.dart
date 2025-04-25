@@ -181,41 +181,58 @@ class _AlemanaState extends State<AlemanaView> {
                         ),
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: ListView.builder(
-                            itemCount: _futureAmount!.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              final cuota = _futureAmount![index];
-                              return Card(
-                                elevation: 2,
-                                margin: const EdgeInsets.symmetric(
-                                    vertical: 5, horizontal: 8),
-                                child: ListTile(
-                                  leading: CircleAvatar(
-                                    backgroundColor: Colors.teal,
-                                    child: Text(
-                                      '${cuota['Periodo']?.toInt()}',
-                                      style:
-                                          const TextStyle(color: Colors.white),
-                                    ),
-                                  ),
-                                  title: Text(
-                                    'Cuota: ${cuota['Cuota']?.toStringAsFixed(2)}',
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  subtitle: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                          'Capital: \$${cuota['Capital']?.toStringAsFixed(2)}'),
-                                      Text(
-                                          'Intereses: \$${cuota['Intereses']?.toStringAsFixed(2)}'),
-                                    ],
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Padding(
+                                padding: EdgeInsets.all(12.0),
+                                child: Text(
+                                  'Tabla de Amortización Alemana',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.teal,
                                   ),
                                 ),
-                              );
-                            },
+                              ),
+                              Expanded(
+                                child: SingleChildScrollView(
+                                  scrollDirection: Axis.vertical,
+                                  child: SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    child: DataTable(
+                                      headingTextStyle: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.teal,
+                                      ),
+                                      columns: const [
+                                        DataColumn(label: Text('Período')),
+                                        DataColumn(label: Text('Cuota')),
+                                        DataColumn(label: Text('Capital')),
+                                        DataColumn(label: Text('Interés')),
+                                        DataColumn(label: Text('Saldo')),
+                                      ],
+                                      rows: _futureAmount!.map((cuota) {
+                                        return DataRow(
+                                          cells: [
+                                            DataCell(Text(
+                                                '${cuota['Periodo']?.toInt()}')),
+                                            DataCell(Text(
+                                                '\$${cuota['Cuota']?.toStringAsFixed(2)}')),
+                                            DataCell(Text(
+                                                '\$${cuota['Capital']?.toStringAsFixed(2)}')),
+                                            DataCell(Text(
+                                                '\$${cuota['Intereses']?.toStringAsFixed(2)}')),
+                                            DataCell(Text(
+                                                '\$${cuota['Saldo']?.toStringAsFixed(2)}')),
+                                          ],
+                                        );
+                                      }).toList(),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       )
