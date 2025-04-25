@@ -4,8 +4,17 @@ import 'dart:math';
 
 class LoanWidget extends StatefulWidget {
   final Function(double) onLoanMade;
+  final double saldoActual;
+  final String nombreUsuario;
+  final String cedulaUsuario;
 
-  const LoanWidget({super.key, required this.onLoanMade});
+  const LoanWidget({
+    super.key, 
+    required this.onLoanMade,
+    this.saldoActual = 0.0,
+    this.nombreUsuario = "Usuario", // Valor predeterminado
+    this.cedulaUsuario = "Sin cédula", // Valor predeterminado
+  });
 
   @override
   _LoanWidgetState createState() => _LoanWidgetState();
@@ -71,6 +80,9 @@ class _LoanWidgetState extends State<LoanWidget> {
 
       _endDate = DateTime.now().add(Duration(days: term * 365));
       widget.onLoanMade(amount);
+      
+      // Mostrar el recibo de préstamo
+      _mostrarReciboPrestamo(amount, rate * 100, term);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Por favor, ingrese valores válidos")),
@@ -78,6 +90,158 @@ class _LoanWidgetState extends State<LoanWidget> {
     }
 
     setState(() {});
+  }
+  
+  void _mostrarReciboPrestamo(double monto, double tasa, int plazo) {
+    final DateTime ahora = DateTime.now();
+    final String fecha = DateFormat('dd/MM/yyyy HH:mm:ss').format(ahora);
+    final String idTransaccion = '${ahora.millisecondsSinceEpoch}';
+    final double nuevoSaldo = widget.saldoActual + monto;
+    
+    // Calcular el monto total a pagar
+    double totalAPagar = 0;
+    if (_monthlyPayments.isNotEmpty) {
+      if (_loanType == "simple") {
+        totalAPagar = _monthlyPayments[0] * (plazo * 12);
+      } else if (_amortizationType == "francesa" || _amortizationType == "alemana") {
+        totalAPagar = _monthlyPayments.reduce((value, element) => value + element);
+      } else {
+        // Americana: último pago incluye capital
+        totalAPagar = _monthlyPayments[0] * (plazo * 12 - 1) + (_monthlyPayments[0] + monto);
+      }
+    }
+    
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Row(
+          children: [
+            const Icon(Icons.receipt_long, color: Colors.teal, size: 28),
+            const SizedBox(width: 10),
+            const Text('Recibo de Préstamo', style: TextStyle(color: Colors.teal)),
+          ],
+        ),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Sección de información de transacción
+              _buildSectionTitle('Información de la Transacción'),
+              _buildInfoRow('Fecha:', fecha),
+              _buildInfoRow('ID Transacción:', idTransaccion),
+              const Divider(),
+              
+              // Sección de información del cliente
+              _buildSectionTitle('Información del Cliente'),
+              _buildInfoRow('Nombre:', widget.nombreUsuario),
+              _buildInfoRow('Cédula:', widget.cedulaUsuario),
+              const Divider(),
+              
+              // Sección de detalles del préstamo
+              _buildSectionTitle('Detalles del Préstamo'),
+              _buildInfoRow('Monto Préstamo:', '\$${monto.toStringAsFixed(2)}', valueColor: Colors.green),
+              _buildInfoRow('Tasa de Interés:', '${tasa.toStringAsFixed(2)}%'),
+              _buildInfoRow('Plazo:', '$plazo años'),
+              _buildInfoRow('Tipo de Interés:', _loanType == "simple" ? "Simple" : "Compuesto"),
+              _buildInfoRow('Amortización:', _amortizationType.capitalizeFirstOfEach),
+              const Divider(),
+              
+              // Sección de resumen de pagos
+              _buildSectionTitle('Resumen de Pagos'),
+              _buildInfoRow('Monto Total a Pagar:', '\$${totalAPagar.toStringAsFixed(2)}', valueColor: Colors.red),
+              _buildInfoRow('Cuota Mensual:', _monthlyPayments.isNotEmpty ? '\$${_monthlyPayments[0].toStringAsFixed(2)}' : 'N/A'),
+              _buildInfoRow('Fecha de Finalización:', _endDate != null ? DateFormat('dd/MM/yyyy').format(_endDate!) : 'N/A'),
+              _buildInfoRow('Total Cuotas:', '${plazo * 12}'),
+              const Divider(),
+              
+              // Sección de saldo
+              _buildSectionTitle('Información de Saldo'),
+              _buildInfoRow('Saldo Anterior:', '\$${widget.saldoActual.toStringAsFixed(2)}'),
+              _buildInfoRow('Nuevo Saldo:', '\$${nuevoSaldo.toStringAsFixed(2)}', valueColor: Colors.green),
+              const Divider(),
+              
+              // Mensaje de confirmación
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.teal.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.teal.withOpacity(0.5)),
+                ),
+                child: const Column(
+                  children: [
+                    Text(
+                      '¡Préstamo aprobado con éxito!',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.teal,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: 5),
+                    Text(
+                      'La transacción se ha registrado correctamente en tu historial de movimientos.',
+                      style: TextStyle(fontSize: 12),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text('Cerrar', style: TextStyle(color: Colors.teal)),
+          ),
+        ],
+      ),
+    );
+  }
+  
+  // Métodos auxiliares para construir el recibo
+  Widget _buildSectionTitle(String title) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Text(
+        title,
+        style: const TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          color: Colors.teal,
+        ),
+      ),
+    );
+  }
+  
+  Widget _buildInfoRow(String label, String value, {Color? valueColor}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+            ),
+          ),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 14,
+              color: valueColor,
+              fontWeight: valueColor != null ? FontWeight.bold : FontWeight.normal,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -121,6 +285,63 @@ class _LoanWidgetState extends State<LoanWidget> {
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                             color: Colors.teal,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.teal.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(Icons.account_balance_wallet, color: Colors.teal),
+                              const SizedBox(width: 10),
+                              Text(
+                                'Saldo actual: \$${widget.saldoActual.toStringAsFixed(2)}',
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.teal.withOpacity(0.05),
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(color: Colors.teal.withOpacity(0.2)),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  const Icon(Icons.person, size: 16, color: Colors.teal),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    widget.nombreUsuario,
+                                    style: const TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 4),
+                              Row(
+                                children: [
+                                  const Icon(Icons.credit_card, size: 16, color: Colors.teal),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    'Cédula: ${widget.cedulaUsuario}',
+                                    style: TextStyle(fontSize: 14, color: Colors.grey.shade700),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
                         ),
                         const SizedBox(height: 16),

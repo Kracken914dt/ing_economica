@@ -361,6 +361,9 @@ Widget buildServiciosScreen() {
                   onLoanMade: (double loanAmount) {
                     makeLoan(loanAmount);
                   },
+                  saldoActual: currentAmount,
+                  nombreUsuario: widget.username,
+                  cedulaUsuario: widget.username.contains(' ') ? widget.username.split(' ')[1] : "12345678",
                 ),
               ),
             );
