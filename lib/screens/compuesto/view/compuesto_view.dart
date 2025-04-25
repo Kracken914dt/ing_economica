@@ -25,58 +25,121 @@ class CompuestoView extends StatelessWidget {
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(24.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Card(
-                  elevation: 4,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      children: [
-                        const Icon(
-                          Icons.trending_up,
-                          size: 48,
-                          color: Colors.teal,
-                        ),
-                        const SizedBox(height: 16),
-                        const Text(
-                          "Seleccione una opción",
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.teal,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Tarjeta de fórmulas
+                  Card(
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    margin: const EdgeInsets.only(bottom: 20),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: const [
+                          Text(
+                            'Fórmulas - Interés Compuesto:',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.teal,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 24),
-                        _buildButton(
-                          context: context,
-                          icon: Icons.monetization_on,
-                          label: "Monto Futuro",
-                          route: "/compuesto/montofuturo",
-                        ),
-                        const SizedBox(height: 16),
-                        _buildButton(
-                          context: context,
-                          icon: Icons.percent,
-                          label: "Tasa Interés",
-                          route: "/compuesto/tasainteres",
-                        ),
-                        const SizedBox(height: 16),
-                        _buildButton(
-                          context: context,
-                          icon: Icons.access_time,
-                          label: "Tiempo",
-                          route: "/compuesto/tiempo",
-                        ),
-                      ],
+                          SizedBox(height: 10),
+                          Text(
+                            'Monto Futuro (F):',
+                            style: TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                          Text('  F = P(1 + i)^n'),
+                          SizedBox(height: 10),
+                          Text(
+                            'Valor Presente (P):',
+                            style: TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                          Text('  P = F/(1 + i)^n'),
+                          SizedBox(height: 10),
+                          Text(
+                            'Tasa de Interés (i):',
+                            style: TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                          Text('  i = (F/P)^(1/n) - 1'),
+                          SizedBox(height: 10),
+                          Text(
+                            'Tiempo (n):',
+                            style: TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                          Text('  n = ln(F/P)/ln(1+i)'),
+                          SizedBox(height: 10),
+                          Divider(),
+                          SizedBox(height: 10),
+                          Text(
+                            'Donde:',
+                            style: TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                          Text('  F = Monto futuro'),
+                          Text('  P = Capital inicial (Valor Presente)'),
+                          Text('  i = Tasa de interés (por periodo)'),
+                          Text('  n = Número de periodos'),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                  // Fin tarjeta de fórmulas
+
+                  Card(
+                    elevation: 4,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        children: [
+                          const Icon(
+                            Icons.trending_up,
+                            size: 48,
+                            color: Colors.teal,
+                          ),
+                          const SizedBox(height: 16),
+                          const Text(
+                            "Seleccione una opción",
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.teal,
+                            ),
+                          ),
+                          const SizedBox(height: 24),
+                          _buildButton(
+                            context: context,
+                            icon: Icons.monetization_on,
+                            label: "Monto Futuro",
+                            route: "/compuesto/montofuturo",
+                          ),
+                          const SizedBox(height: 16),
+                          _buildButton(
+                            context: context,
+                            icon: Icons.percent,
+                            label: "Tasa Interés",
+                            route: "/compuesto/tasainteres",
+                          ),
+                          const SizedBox(height: 16),
+                          _buildButton(
+                            context: context,
+                            icon: Icons.access_time,
+                            label: "Tiempo",
+                            route: "/compuesto/tiempo",
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

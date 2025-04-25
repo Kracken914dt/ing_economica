@@ -83,6 +83,65 @@ class _InflacionState extends State<Inflacion> {
           child: Column(
             children: [
               Card(
+                elevation: 2,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                margin: const EdgeInsets.only(bottom: 20),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      Text(
+                        'Fórmulas - Cálculo de Inflación:',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.teal,
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Text(
+                        'Inflación Anual:',
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                      Text('  IA = ((IPCf - IPCi) / IPCi) * 100'),
+                      SizedBox(height: 10),
+                      Text(
+                        'Inflación Mensual:',
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                      Text('  IM = ((IPCa / IPCant) - 1) * 100'),
+                      SizedBox(height: 10),
+                      Text(
+                        'Inflación Acumulada:',
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                      Text(
+                          '  IAc = ((1 + IM1/100) * (1 + IM2/100) * ... - 1) * 100'),
+                      SizedBox(height: 10),
+                      Divider(),
+                      SizedBox(height: 10),
+                      Text(
+                        'Donde:',
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                      Text('  IA = Inflación anual (%)'),
+                      Text('  IM = Inflación mensual (%)'),
+                      Text('  IAc = Inflación acumulada (%)'),
+                      Text('  IPCi = Índice de Precios al Consumidor inicial'),
+                      Text('  IPCf = Índice de Precios al Consumidor final'),
+                      Text('  IPCa = Índice de Precios al Consumidor actual'),
+                      Text(
+                          '  IPCant = Índice de Precios al Consumidor anterior'),
+                      Text(
+                          '  IM1, IM2, ... = Inflaciones mensuales individuales (%)'),
+                    ],
+                  ),
+                ),
+              ),
+              Card(
                 elevation: 4,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15),

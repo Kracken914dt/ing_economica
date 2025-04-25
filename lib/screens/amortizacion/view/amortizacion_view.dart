@@ -25,58 +25,122 @@ class AmortizacionView extends StatelessWidget {
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(24.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Card(
-                  elevation: 4,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      children: [
-                        const Icon(
-                          Icons.account_balance_outlined,
-                          size: 48,
-                          color: Colors.teal,
-                        ),
-                        const SizedBox(height: 16),
-                        const Text(
-                          "Seleccione una opción",
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.teal,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Tarjeta de fórmulas
+                  Card(
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    margin: const EdgeInsets.only(bottom: 20),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: const [
+                          Text(
+                            'Fórmulas - Amortización:',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.teal,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 24),
-                        _buildButton(
-                          context: context,
-                          icon: Icons.calculate,
-                          label: "Amortización Francesa",
-                          route: "/amortizacion/francesa",
-                        ),
-                        const SizedBox(height: 16),
-                        _buildButton(
-                          context: context,
-                          icon: Icons.account_balance,
-                          label: "Amortización Alemana",
-                          route: "/amortizacion/alemana",
-                        ),
-                        const SizedBox(height: 16),
-                        _buildButton(
-                          context: context,
-                          icon: Icons.account_balance,
-                          label: "Amortización Americana",
-                          route: "/amortizacion/americana",
-                        ),
-                      ],
+                          SizedBox(height: 10),
+                          Text(
+                            'Francesa (cuota fija):',
+                            style: TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                          Text('  C = P * i * (1+i)^n / [(1+i)^n - 1]'),
+                          Text('  Interés = Saldo * i'),
+                          Text('  Amortización = C - Interés'),
+                          SizedBox(height: 10),
+                          Text(
+                            'Alemana (amortización fija):',
+                            style: TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                          Text('  Amortización = P / n'),
+                          Text('  Interés = Saldo * i'),
+                          Text('  Cuota = Amortización + Interés'),
+                          SizedBox(height: 10),
+                          Text(
+                            'Americana (sólo intereses, capital al final):',
+                            style: TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                          Text('  Cuota = P * i'),
+                          Text('  Interés = P * i'),
+                          Text('  Amortización (última cuota) = P'),
+                          SizedBox(height: 10),
+                          Divider(),
+                          SizedBox(height: 10),
+                          Text(
+                            'Donde:',
+                            style: TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                          Text('  C = Cuota periódica'),
+                          Text('  P = Préstamo (monto inicial)'),
+                          Text('  i = Tasa de interés por periodo'),
+                          Text('  n = Número de periodos'),
+                          Text('  Saldo = Capital pendiente de amortizar'),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                  // Fin tarjeta de fórmulas
+
+                  Card(
+                    elevation: 4,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        children: [
+                          const Icon(
+                            Icons.account_balance_outlined,
+                            size: 48,
+                            color: Colors.teal,
+                          ),
+                          const SizedBox(height: 16),
+                          const Text(
+                            "Seleccione una opción",
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.teal,
+                            ),
+                          ),
+                          const SizedBox(height: 24),
+                          _buildButton(
+                            context: context,
+                            icon: Icons.calculate,
+                            label: "Amortización Francesa",
+                            route: "/amortizacion/francesa",
+                          ),
+                          const SizedBox(height: 16),
+                          _buildButton(
+                            context: context,
+                            icon: Icons.account_balance,
+                            label: "Amortización Alemana",
+                            route: "/amortizacion/alemana",
+                          ),
+                          const SizedBox(height: 16),
+                          _buildButton(
+                            context: context,
+                            icon: Icons.account_balance,
+                            label: "Amortización Americana",
+                            route: "/amortizacion/americana",
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

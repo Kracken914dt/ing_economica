@@ -147,6 +147,71 @@ class _BonosState extends State<Bonos> {
           child: Column(
             children: [
               Card(
+                elevation: 2,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                margin: const EdgeInsets.only(bottom: 20),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      Text(
+                        'Fórmulas - Cálculo de Bonos:',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.teal,
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Text(
+                        'Precio del Bono:',
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                      Text('  P = Σ [ C / (1+r)^t ] + VN / (1+r)^n'),
+                      SizedBox(height: 10),
+                      Text(
+                        'Precio Sucio:',
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                      Text('  PS = Σ [ C / (1+r)^t ] + VN / (1+r)^n'),
+                      SizedBox(height: 10),
+                      Text(
+                        'Interés Devengado:',
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                      Text('  ID = C * (DD / DC)'),
+                      SizedBox(height: 10),
+                      Text(
+                        'Precio Limpio:',
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                      Text('  PL = PS - ID'),
+                      SizedBox(height: 10),
+                      Divider(),
+                      SizedBox(height: 10),
+                      Text(
+                        'Donde:',
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                      Text('  P = Precio del bono'),
+                      Text('  PS = Precio sucio'),
+                      Text('  ID = Interés devengado'),
+                      Text('  PL = Precio limpio'),
+                      Text('  C = Pago del cupón (VN * tasa cupón)'),
+                      Text('  VN = Valor nominal del bono'),
+                      Text('  r = Tasa de rendimiento requerida'),
+                      Text('  t = Tiempo hasta cada flujo de cupón'),
+                      Text('  n = Tiempo hasta el vencimiento'),
+                      Text('  DD = Días devengados desde último cupón'),
+                      Text('  DC = Días del periodo del cupón'),
+                    ],
+                  ),
+                ),
+              ),
+              Card(
                 elevation: 4,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15),

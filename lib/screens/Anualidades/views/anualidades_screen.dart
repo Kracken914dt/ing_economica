@@ -10,7 +10,7 @@ class _AnualidadesScreenState extends State<AnualidadesScreen> {
   final TextEditingController _pagoController = TextEditingController();
   final TextEditingController _tasaController = TextEditingController();
   final TextEditingController _duracionController = TextEditingController();
-  
+
   double _valorFuturo = 0.0;
   double _valorPresente = 0.0;
 
@@ -23,11 +23,12 @@ class _AnualidadesScreenState extends State<AnualidadesScreen> {
     int duracion = int.parse(_duracionController.text);
 
     var calculadora = AnualidadCalculator();
-    
+
     // Obtener los factores
-    double factorCapitalizacion = getCapitalizationFactor(_frecuenciaCapitalizacion);
+    double factorCapitalizacion =
+        getCapitalizationFactor(_frecuenciaCapitalizacion);
     double factorPago = getPaymentFrequencyFactor(_frecuenciaPago);
-    
+
     // Calcular el valor futuro
     _valorFuturo = calculadora.calcularValorFuturoOrdinaria(
       pago: pago,
@@ -108,6 +109,65 @@ class _AnualidadesScreenState extends State<AnualidadesScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Tarjeta de fórmulas
+              Card(
+                elevation: 2,
+                margin: const EdgeInsets.only(bottom: 20),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      Text(
+                        'Fórmulas - Anualidades:',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.teal,
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Text(
+                        'Valor Futuro - Ordinaria (F):',
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                      Text('  F = A * [(1+i)^n - 1] / i'),
+                      SizedBox(height: 10),
+                      Text(
+                        'Valor Presente - Ordinaria (P):',
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                      Text('  P = A * [1 - (1+i)^-n] / i'),
+                      SizedBox(height: 10),
+                      Text(
+                        'Valor Futuro - Anticipada (F):',
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                      Text('  F = A * [(1+i)^n - 1] / i * (1+i)'),
+                      SizedBox(height: 10),
+                      Text(
+                        'Valor Presente - Anticipada (P):',
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                      Text('  P = A * [1 - (1+i)^-n] / i * (1+i)'),
+                      SizedBox(height: 10),
+                      Divider(),
+                      SizedBox(height: 10),
+                      Text(
+                        'Donde:',
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                      Text('  F = Valor futuro de la anualidad'),
+                      Text('  P = Valor presente de la anualidad'),
+                      Text('  A = Pago periódico (renta)'),
+                      Text('  i = Tasa de interés por periodo'),
+                      Text('  n = Número de periodos'),
+                    ],
+                  ),
+                ),
+              ),
+              // Fin tarjeta de fórmulas
+
               Card(
                 elevation: 4,
                 child: Padding(
@@ -187,8 +247,13 @@ class _AnualidadesScreenState extends State<AnualidadesScreen> {
                               _frecuenciaCapitalizacion = newValue!;
                             });
                           },
-                          items: <String>['Anual', 'Semestral', 'Trimestral', 'Cuatrimestral', 'Mensual']
-                              .map<DropdownMenuItem<String>>((String value) {
+                          items: <String>[
+                            'Anual',
+                            'Semestral',
+                            'Trimestral',
+                            'Cuatrimestral',
+                            'Mensual'
+                          ].map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
                               child: Text(value),
@@ -222,8 +287,13 @@ class _AnualidadesScreenState extends State<AnualidadesScreen> {
                               _frecuenciaPago = newValue!;
                             });
                           },
-                          items: <String>['Anual', 'Semestral', 'Trimestral', 'Cuatrimestral', 'Mensual']
-                              .map<DropdownMenuItem<String>>((String value) {
+                          items: <String>[
+                            'Anual',
+                            'Semestral',
+                            'Trimestral',
+                            'Cuatrimestral',
+                            'Mensual'
+                          ].map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
                               child: Text(value),

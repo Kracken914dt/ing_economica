@@ -54,12 +54,12 @@ class _SimpleInteresState extends State<SimpleInteres> {
 
       timeInYears = years + (months / 12) + (days / 360);
       if (interesGenerado != null && initialCapital > 0) {
-        final i = (interesGenerado / (initialCapital * timeInYears)) *100;
+        final i = (interesGenerado / (initialCapital * timeInYears)) * 100;
         print(i);
-        print("calcula aquiiiii" );
-         setState(() {
-        _interestRate = i as double?;
-      });
+        print("calcula aquiiiii");
+        setState(() {
+          _interestRate = i as double?;
+        });
       }
     }
 
@@ -69,7 +69,7 @@ class _SimpleInteresState extends State<SimpleInteres> {
       setState(() {
         _interestRate = rate as double?;
       });
-    } 
+    }
   }
 
   Future<void> _selectDate(
@@ -103,6 +103,50 @@ class _SimpleInteresState extends State<SimpleInteres> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Card(
+                elevation: 2,
+                margin: const EdgeInsets.only(bottom: 20),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      Text(
+                        'Fórmulas - Tasa de Interés Simple (i):',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.teal,
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Text(
+                        'Con Interés Generado (I):',
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                      Text('  i = I / (P * t)'),
+                      SizedBox(height: 10),
+                      Text(
+                        'Con Monto Futuro (F):',
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                      Text('  i = (F - P) / (P * t)'),
+                      SizedBox(height: 10),
+                      Divider(),
+                      SizedBox(height: 10),
+                      Text(
+                        'Donde:',
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                      Text('  i = Tasa de interés (por periodo)'),
+                      Text('  I = Interés generado'),
+                      Text('  P = Capital inicial (Valor Presente)'),
+                      Text('  F = Monto final (Valor Futuro)'),
+                      Text('  t = Tiempo (en número de periodos)'),
+                    ],
+                  ),
+                ),
+              ),
+              Card(
                 elevation: 4,
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
@@ -119,19 +163,19 @@ class _SimpleInteresState extends State<SimpleInteres> {
                       ),
                       const SizedBox(height: 16),
                       _buildTextField(
-                        _futureAmountController, 
+                        _futureAmountController,
                         'Monto Futuro',
                         prefixIcon: Icons.attach_money,
                       ),
                       const SizedBox(height: 16),
                       _buildTextField(
-                        _initialCapitalController, 
+                        _initialCapitalController,
                         'Capital Inicial',
                         prefixIcon: Icons.attach_money,
                       ),
                       const SizedBox(height: 16),
                       _buildTextField(
-                        _interesGenradoController, 
+                        _interesGenradoController,
                         'Interés Generado',
                         prefixIcon: Icons.percent,
                       ),

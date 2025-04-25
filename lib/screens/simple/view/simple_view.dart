@@ -25,58 +25,122 @@ class SimpleView extends StatelessWidget {
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(24.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Card(
-                  elevation: 4,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      children: [
-                        const Icon(
-                          Icons.calculate_outlined,
-                          size: 48,
-                          color: Colors.teal,
-                        ),
-                        const SizedBox(height: 16),
-                        const Text(
-                          "Seleccione una opción",
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.teal,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Tarjeta de fórmulas
+                  Card(
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    margin: const EdgeInsets.only(bottom: 20),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: const [
+                          Text(
+                            'Fórmulas - Interés Simple:',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.teal,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 24),
-                        _buildButton(
-                          context: context,
-                          icon: Icons.monetization_on,
-                          label: "Monto",
-                          route: "/simple/form",
-                        ),
-                        const SizedBox(height: 16),
-                        _buildButton(
-                          context: context,
-                          icon: Icons.percent,
-                          label: "Tasa Interés",
-                          route: "/simple/interes",
-                        ),
-                        const SizedBox(height: 16),
-                        _buildButton(
-                          context: context,
-                          icon: Icons.access_time,
-                          label: "Tiempo",
-                          route: "/simple/tiempo",
-                        ),
-                      ],
+                          SizedBox(height: 10),
+                          Text(
+                            'Interés generado (I):',
+                            style: TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                          Text('  I = P * i * t'),
+                          SizedBox(height: 10),
+                          Text(
+                            'Monto futuro (F):',
+                            style: TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                          Text('  F = P * (1 + i * t)'),
+                          SizedBox(height: 10),
+                          Text(
+                            'Tasa de interés (i):',
+                            style: TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                          Text('  i = I / (P * t)'),
+                          SizedBox(height: 10),
+                          Text(
+                            'Tiempo (t):',
+                            style: TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                          Text('  t = I / (P * i)'),
+                          SizedBox(height: 10),
+                          Divider(),
+                          SizedBox(height: 10),
+                          Text(
+                            'Donde:',
+                            style: TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                          Text('  I = Interés generado'),
+                          Text('  P = Capital inicial (Valor Presente)'),
+                          Text('  F = Monto final (Valor Futuro)'),
+                          Text('  i = Tasa de interés por periodo'),
+                          Text('  t = Tiempo (en periodos)'),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                  // Fin tarjeta de fórmulas
+
+                  Card(
+                    elevation: 4,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        children: [
+                          const Icon(
+                            Icons.calculate_outlined,
+                            size: 48,
+                            color: Colors.teal,
+                          ),
+                          const SizedBox(height: 16),
+                          const Text(
+                            "Seleccione una opción",
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.teal,
+                            ),
+                          ),
+                          const SizedBox(height: 24),
+                          _buildButton(
+                            context: context,
+                            icon: Icons.monetization_on,
+                            label: "Monto",
+                            route: "/simple/form",
+                          ),
+                          const SizedBox(height: 16),
+                          _buildButton(
+                            context: context,
+                            icon: Icons.percent,
+                            label: "Tasa Interés",
+                            route: "/simple/interes",
+                          ),
+                          const SizedBox(height: 16),
+                          _buildButton(
+                            context: context,
+                            icon: Icons.access_time,
+                            label: "Tiempo",
+                            route: "/simple/tiempo",
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

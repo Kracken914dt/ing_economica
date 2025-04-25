@@ -71,6 +71,58 @@ class _TIRViewState extends State<TIRView> {
             key: _formKey,
             child: ListView(
               children: [
+                // Tarjeta de fórmulas
+                Card(
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  margin: const EdgeInsets.only(bottom: 20),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: const [
+                        Text(
+                          'Fórmulas - Tasa Interna de Retorno (TIR):',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.teal,
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        Text(
+                          'Ecuación general:',
+                          style: TextStyle(fontWeight: FontWeight.w600),
+                        ),
+                        Text('  -P + Σ Fn/(1+i)^n = 0'),
+                        SizedBox(height: 10),
+                        Text(
+                          'Donde:',
+                          style: TextStyle(fontWeight: FontWeight.w600),
+                        ),
+                        Text('  TIR = Valor de i que satisface la ecuación'),
+                        Text('  P = Inversión inicial'),
+                        Text('  Fn = Flujo de caja en el periodo n'),
+                        Text('  i = Tasa de interés (la incógnita)'),
+                        Text('  n = Periodo del flujo'),
+                        SizedBox(height: 10),
+                        Divider(),
+                        SizedBox(height: 10),
+                        Text(
+                          'Interpretación:',
+                          style: TextStyle(fontWeight: FontWeight.w600),
+                        ),
+                        Text('  • Si TIR > Tasa mínima: Proyecto aceptable'),
+                        Text('  • Si TIR = Tasa mínima: Proyecto indiferente'),
+                        Text('  • Si TIR < Tasa mínima: Proyecto no rentable'),
+                      ],
+                    ),
+                  ),
+                ),
+                // Fin tarjeta de fórmulas
+
                 Card(
                   elevation: 4,
                   shape: RoundedRectangleBorder(
