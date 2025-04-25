@@ -71,126 +71,207 @@ class _GeometricValueCalculatorState extends State<GeometricValueCalculator> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Cálculo de Valor Geométrico'),
+        backgroundColor: Colors.teal,
+        centerTitle: true,
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Select for Valor Presente or Valor Futuro
-              Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFFEF7FF),
-                  borderRadius: BorderRadius.circular(30),
-                  border: Border.all(
-                    color: Colors.grey, // Color del borde
-                    width: 1, // Ancho del borde
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.teal.withOpacity(0.1),
+              Colors.white,
+            ],
+          ),
+        ),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24.0),
+          child: Card(
+            elevation: 4,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  const Icon(
+                    Icons.show_chart,
+                    size: 48,
+                    color: Colors.teal,
                   ),
-                ),
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton<String>(
-                    isExpanded:
-                        true, // Permite que el DropdownButton ocupe todo el ancho disponible
+                  const SizedBox(height: 16),
+                  const Text(
+                    "Cálculo de Valor Geométrico",
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.teal,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  _buildDropdown(
                     value: _valueType,
-                    onChanged: (String? newValue) {
+                    items: ['Valor Presente', 'Valor Futuro'],
+                    onChanged: (newValue) {
                       setState(() {
                         _valueType = newValue!;
                       });
                     },
-                    items: <String>['Valor Presente', 'Valor Futuro']
-                        .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
                   ),
-                ),
-              ),
-              const SizedBox(height: 24),
-              // Select for Creciente or Decreciente
-              Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFFEF7FF),
-                  borderRadius: BorderRadius.circular(30),
-                  border: Border.all(
-                    color: Colors.grey, // Color del borde
-                    width: 1, // Ancho del borde
-                  ),
-                ),
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton<String>(
-                    isExpanded:
-                        true, // Permite que el DropdownButton ocupe todo el ancho disponible
+                  const SizedBox(height: 24),
+                  _buildDropdown(
                     value: _growthType,
-                    onChanged: (String? newValue) {
+                    items: ['Creciente', 'Decreciente'],
+                    onChanged: (newValue) {
                       setState(() {
                         _growthType = newValue!;
                       });
                     },
-                    items: <String>['Creciente', 'Decreciente']
-                        .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
                   ),
-                ),
+                  const SizedBox(height: 24),
+                  // Input fields for A, G, i, n
+                  _buildTextField(
+                      _seriePagosController, 'Serie de Pagos (A)', Icons.money),
+                  const SizedBox(height: 24),
+                  _buildTextField(
+                      _variacionController, 'Variación (G)', Icons.trending_up),
+                  const SizedBox(height: 24),
+                  _buildTextField(
+                      _interesController, 'Tasa de Interés (i)', Icons.percent),
+                  const SizedBox(height: 24),
+                  _buildTextField(_periodosController, 'Número de Periodos (n)',
+                      Icons.date_range),
+                  const SizedBox(height: 24),
+                  _buildCalculateButton(),
+                  const SizedBox(height: 24),
+                  if (_calculatedValue != null) _buildResultCard(),
+                ],
               ),
-              const SizedBox(height: 24),
-              // Input fields for A, G, i, n
-              _buildTextField(_seriePagosController, 'Serie de Pagos (A)'),
-              const SizedBox(height: 24),
-              _buildTextField(_variacionController, 'Variación (G)'),
-              const SizedBox(height: 24),
-              _buildTextField(_interesController, 'Tasa de Interés (i)'),
-              const SizedBox(height: 24),
-              _buildTextField(_periodosController, 'Número de Periodos (n)'),
-              const SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _calculateValue,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.all(20),
-                    backgroundColor: const Color(0xFF232323),
-                    foregroundColor: Colors.white,
-                  ),
-                  child: const Text("Calcular"),
-                ),
-              ),
-              const SizedBox(height: 24),
-              if (_calculatedValue != null)
-                Text(
-                  'Resultado: ${_calculatedValue!.toStringAsFixed(2)}',
-                  style: const TextStyle(
-                    fontSize: 18,
-                    color: Colors.black,
-                  ),
-                ),
-            ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildTextField(TextEditingController controller, String label) {
+  Widget _buildDropdown({
+    required String value,
+    required List<String> items,
+    required void Function(String?) onChanged,
+  }) {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: const Color(0xFFFEF7FF),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: Colors.grey,
+          width: 1,
+        ),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          isExpanded: true,
+          value: value,
+          onChanged: onChanged,
+          items: items.map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value),
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField(
+      TextEditingController controller, String label, IconData icon) {
     return TextField(
       controller: controller,
       decoration: InputDecoration(
         labelText: label,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30.0),
+          borderRadius: BorderRadius.circular(10.0),
         ),
+        prefixIcon: Icon(icon),
       ),
       keyboardType: TextInputType.number,
+    );
+  }
+
+  Widget _buildCalculateButton() {
+    return Container(
+      width: 280,
+      height: 60,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(30),
+        gradient: LinearGradient(
+          colors: [Colors.teal.shade700, Colors.teal],
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.teal.withOpacity(0.3),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: ElevatedButton.icon(
+        onPressed: _calculateValue,
+        icon: const Icon(Icons.calculate, size: 24),
+        label: const Text(
+          'Calcular',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.transparent,
+          foregroundColor: Colors.white,
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 32),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildResultCard() {
+    return Container(
+      width: double.infinity,
+      child: Card(
+        elevation: 4,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        color: Colors.teal.shade50,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('Resultado',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.teal,
+                  )),
+              const SizedBox(height: 10),
+              Text('\$${_calculatedValue!.toStringAsFixed(2)}',
+                  style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.teal.shade700,
+                  )),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
