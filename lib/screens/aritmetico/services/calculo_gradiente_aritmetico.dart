@@ -1,119 +1,206 @@
 import 'package:intl/intl.dart';
 import 'dart:math';
+
 class GradienteACalculator {
-  
- double calculatePresentValue({
+  // Calcula el valor presente de un gradiente aritmético
+  double calculatePresentValue({
     required double pago,
     required double gradiente,
     required double periodos,
     required double interes,
     required bool perfil,
   }) {
-    interes = interes/100;
-    if (perfil == true){
-      double presentValue =  pago*((pow(1+interes,periodos)-1)/(interes*pow( 1 + interes, periodos)))+(gradiente/interes)*((pow(1 + interes, periodos)-1)/(interes*(pow(1 + interes,periodos)))-(periodos/pow(1 + interes, periodos)));
+    // Convertir la tasa de interés a decimal si viene en porcentaje
+    double i = interes >= 1 ? interes / 100 : interes;
+
+    // Calcular valor presente con la fórmula adecuada según el perfil
+    if (perfil == true) {
+      // Gradiente creciente: P = A * [(1+i)^n - 1]/[i*(1+i)^n] + (G/i)*[((1+i)^n - 1)/(i*(1+i)^n) - n/(1+i)^n]
+      double presentValue =
+          pago * ((pow(1 + i, periodos) - 1) / (i * pow(1 + i, periodos))) +
+              (gradiente / i) *
+                  ((pow(1 + i, periodos) - 1) / (i * pow(1 + i, periodos)) -
+                      (periodos / pow(1 + i, periodos)));
+
+      print(
+          'Fórmula: Pago * [(1+i)^periodos - 1]/[i*(1+i)^periodos] + (Gradiente/i)*[((1+i)^periodos - 1)/(i*(1+i)^periodos) - periodos/(1+i)^periodos]');
+      print('Valor presente calculado (creciente): $presentValue');
+
       return presentValue;
-    } else{
-      double presentValue =  pago*((pow(1+interes,periodos)-1)/(interes*pow( 1 + interes, periodos)))-(gradiente/interes)*((pow(1 + interes, periodos)-1)/(interes*(pow(1 + interes,periodos)))-(periodos/pow(1 + interes, periodos)));
+    } else {
+      // Gradiente decreciente: P = A * [(1+i)^n - 1]/[i*(1+i)^n] - (G/i)*[((1+i)^n - 1)/(i*(1+i)^n) - n/(1+i)^n]
+      double presentValue =
+          pago * ((pow(1 + i, periodos) - 1) / (i * pow(1 + i, periodos))) -
+              (gradiente / i) *
+                  ((pow(1 + i, periodos) - 1) / (i * pow(1 + i, periodos)) -
+                      (periodos / pow(1 + i, periodos)));
+
+      print('Valor presente calculado (decreciente): $presentValue');
+
       return presentValue;
     }
-    
   }
 
-   double calculateFirtsPaymentPresentValue({
+  // Calcula el primer pago basado en el valor presente de un gradiente aritmético
+  double calculateFirtsPaymentPresentValue({
     required double present,
     required double gradiente,
     required double periodos,
     required double interes,
     required bool perfil,
   }) {
-    interes = interes/100;
-    if (perfil == true){
-      double presentValue =  (present-(gradiente/interes)*((pow(1 + interes, periodos)-1)/(interes*(pow(1 + interes,periodos)))-(periodos/pow(1 + interes, periodos))))/((pow(1+interes,periodos)-1)/(interes*pow( 1 + interes, periodos)));
+    // Convertir la tasa de interés a decimal si viene en porcentaje
+    double i = interes >= 1 ? interes / 100 : interes;
+
+    // Calcular el primer pago según la fórmula adecuada según el perfil
+    if (perfil == true) {
+      // Fórmula despejada para primer pago (gradiente creciente)
+      double presentValue = (present -
+              (gradiente / i) *
+                  ((pow(1 + i, periodos) - 1) / (i * pow(1 + i, periodos)) -
+                      (periodos / pow(1 + i, periodos)))) /
+          ((pow(1 + i, periodos) - 1) / (i * pow(1 + i, periodos)));
+
+      print('Primer pago calculado (creciente): $presentValue');
+
       return presentValue;
-    } else{
-      double presentValue =  (present+(gradiente/interes)*((pow(1 + interes, periodos)-1)/(interes*(pow(1 + interes,periodos)))-(periodos/pow(1 + interes, periodos))))/((pow(1+interes,periodos)-1)/(interes*pow( 1 + interes, periodos)));
+    } else {
+      // Fórmula despejada para primer pago (gradiente decreciente)
+      double presentValue = (present +
+              (gradiente / i) *
+                  ((pow(1 + i, periodos) - 1) / (i * pow(1 + i, periodos)) -
+                      (periodos / pow(1 + i, periodos)))) /
+          ((pow(1 + i, periodos) - 1) / (i * pow(1 + i, periodos)));
+
+      print('Primer pago calculado (decreciente): $presentValue');
+
       return presentValue;
     }
-    
   }
 
-   double calculateFutureValue({
-    required double pago,
-    required double gradiente,
-    required double periodos,
-    required double interes,
-    required bool perfil
-  }) {
-    interes = interes/100;
-    if (perfil == true){
-      double futureValue =  pago*((pow(1+interes,periodos)-1)/(interes))+(gradiente/interes)*((pow(1 + interes, periodos)-1)/(interes)-(periodos));
+  // Calcula el valor futuro de un gradiente aritmético
+  double calculateFutureValue(
+      {required double pago,
+      required double gradiente,
+      required double periodos,
+      required double interes,
+      required bool perfil}) {
+    // Convertir la tasa de interés a decimal si viene en porcentaje
+    double i = interes >= 1 ? interes / 100 : interes;
+
+    // Calcular valor futuro con la fórmula adecuada según el perfil
+    if (perfil == true) {
+      // Gradiente creciente: F = A * [(1+i)^n - 1]/i + (G/i)*[((1+i)^n - 1)/i - n]
+      double futureValue = pago * ((pow(1 + i, periodos) - 1) / i) +
+          (gradiente / i) * ((pow(1 + i, periodos) - 1) / i - periodos);
+
+      print('Valor futuro calculado (creciente): $futureValue');
+
       return futureValue;
-    } else{
-      double futureValue =  pago*((pow(1+interes,periodos)-1)/(interes))-(gradiente/interes)*((pow(1 + interes, periodos)-1)/(interes)-(periodos));
+    } else {
+      // Gradiente decreciente: F = A * [(1+i)^n - 1]/i - (G/i)*[((1+i)^n - 1)/i - n]
+      double futureValue = pago * ((pow(1 + i, periodos) - 1) / i) -
+          (gradiente / i) * ((pow(1 + i, periodos) - 1) / i - periodos);
+
+      print('Valor futuro calculado (decreciente): $futureValue');
+
       return futureValue;
     }
   }
 
-  double calculateFirtsPaymentFutureValue({
-    required double future,
-    required double gradiente,
-    required double periodos,
-    required double interes,
-    required bool perfil
-  }) {
-    interes = interes/100;
-    if (perfil == true){
-      double futureValue =  (future-(gradiente/interes)*((pow(1 + interes, periodos)-1)/(interes)-(periodos)))/((pow(1+interes,periodos)-1)/(interes));
+  // Calcula el primer pago basado en el valor futuro de un gradiente aritmético
+  double calculateFirtsPaymentFutureValue(
+      {required double future,
+      required double gradiente,
+      required double periodos,
+      required double interes,
+      required bool perfil}) {
+    // Convertir la tasa de interés a decimal si viene en porcentaje
+    double i = interes >= 1 ? interes / 100 : interes;
+
+    // Calcular el primer pago según la fórmula adecuada según el perfil
+    if (perfil == true) {
+      // Fórmula despejada para primer pago (gradiente creciente)
+      double futureValue = (future -
+              (gradiente / i) * ((pow(1 + i, periodos) - 1) / i - periodos)) /
+          ((pow(1 + i, periodos) - 1) / i);
+
+      print('Primer pago desde valor futuro (creciente): $futureValue');
+
       return futureValue;
-    } else{
-      double futureValue =  (future+(gradiente/interes)*((pow(1 + interes, periodos)-1)/(interes)-(periodos)))/((pow(1+interes,periodos)-1)/(interes));
+    } else {
+      // Fórmula despejada para primer pago (gradiente decreciente)
+      double futureValue = (future +
+              (gradiente / i) * ((pow(1 + i, periodos) - 1) / i - periodos)) /
+          ((pow(1 + i, periodos) - 1) / i);
+
+      print('Primer pago desde valor futuro (decreciente): $futureValue');
+
       return futureValue;
     }
   }
 
-  double calculateInfinitePresentValue({
-    required double pago,
-    required double gradiente,
-    required double interes,
-    required bool perfil
-  }) {
-    interes = interes/100;
-    if (perfil == true){
-      double infinitePresentValue =  (pago/interes)+(gradiente/pow(interes,2));
+  // Calcula el valor presente de un gradiente aritmético infinito
+  double calculateInfinitePresentValue(
+      {required double pago,
+      required double gradiente,
+      required double interes,
+      required bool perfil}) {
+    // Convertir la tasa de interés a decimal si viene en porcentaje
+    double i = interes >= 1 ? interes / 100 : interes;
+
+    // Calcular valor presente infinito según la fórmula adecuada
+    if (perfil == true) {
+      // Gradiente creciente infinito: P = pago/i + gradiente/i²
+      double infinitePresentValue = (pago / i) + (gradiente / pow(i, 2));
+
+      print('Valor presente infinito (creciente): $infinitePresentValue');
+
       return infinitePresentValue;
-    }else{
-      double infinitePresentValue =  (pago/interes)-(gradiente/pow(interes,2));
+    } else {
+      // Gradiente decreciente infinito: P = pago/i - gradiente/i²
+      double infinitePresentValue = (pago / i) - (gradiente / pow(i, 2));
+
+      print('Valor presente infinito (decreciente): $infinitePresentValue');
+
       return infinitePresentValue;
     }
   }
 
-  double calculateSpecificQouta({
-    required double pago,
-    required double gradiente,
-    required double periodos
-  }) {
-    
-    double specificQuota =  (pago + (periodos - 1) * gradiente);
+  // Calcula una cuota específica de un gradiente aritmético
+  double calculateSpecificQouta(
+      {required double pago,
+      required double gradiente,
+      required double periodos}) {
+    // Fórmula de cuota específica: Cuotan = A + (n-1)*G
+    double specificQuota = (pago + (periodos - 1) * gradiente);
+
+    print('Cuota específica en el período $periodos: $specificQuota');
 
     return specificQuota;
   }
 
+  // Calcula el número de períodos basado en días, meses y años
   double calculatePeriod({
     required double days,
     required double months,
     required double years,
     required String mcuota,
-  }){
-    double periodo=0;
+  }) {
+    double periodo = 0;
 
-    if (mcuota == "Mensual"){
-      double periodo = (days/30+months+years*12);
+    if (mcuota == "Mensual") {
+      // Convertir a períodos mensuales
+      periodo = (days / 30 + months + years * 12);
+      print('Períodos mensuales calculados: $periodo');
       return periodo;
-    } else if(mcuota == "Anual"){
-      double periodo = (days/360+months/12+years);
+    } else if (mcuota == "Anual") {
+      // Convertir a períodos anuales
+      periodo = (days / 360 + months / 12 + years);
+      print('Períodos anuales calculados: $periodo');
       return periodo;
     }
+
     return periodo;
   }
 

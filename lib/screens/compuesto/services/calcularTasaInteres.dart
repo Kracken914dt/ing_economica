@@ -17,17 +17,23 @@ class InterestCalculator {
     print('Capital: $capital');
     print('Monto Futuro: $montofuturo');
     print('Meses calculados: $meses');
+    print('Veces por año: $vecesporano');
 
-    // Fórmula correcta: i = ((MC / C) ^ (1/n)) - 1
-    double tasaMensual = (pow(montofuturo / capital, (1 / meses)) - 1);
-    double tasaPorcentaje = tasaMensual * 100;
+    // Calculamos el número de períodos según la frecuencia de capitalización
+    double periodos = meses * vecesporano / 12;
 
-    print('Fórmula: ((${montofuturo} / ${capital}) ^ (1/${meses})) - 1');
-    print('Cálculo: (${montofuturo / capital} ^ ${1 / meses}) - 1');
-    print('Tasa mensual decimal: $tasaMensual');
-    print('Tasa mensual porcentaje: $tasaPorcentaje%');
+    // Fórmula correcta: i = ((MC / C) ^ (1/periodos)) - 1
+    double tasaPorPeriodo = (pow(montofuturo / capital, (1 / periodos)) - 1);
 
-    return tasaPorcentaje;
+    // Convertimos la tasa por período a tasa anual nominal
+    double tasaAnualNominal = tasaPorPeriodo * vecesporano * 100;
+
+    print('Períodos calculados: $periodos');
+    print('Fórmula: ((${montofuturo} / ${capital}) ^ (1/${periodos})) - 1');
+    print('Tasa por período: $tasaPorPeriodo');
+    print('Tasa anual nominal: $tasaAnualNominal%');
+
+    return tasaAnualNominal;
   }
 
   double calculateInterestRate({

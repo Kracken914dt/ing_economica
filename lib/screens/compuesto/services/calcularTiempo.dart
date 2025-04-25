@@ -1,5 +1,6 @@
 import 'package:intl/intl.dart';
 import 'dart:math';
+
 class TiempoCalculator {
   double calculateTiempo({
     required double capital,
@@ -7,11 +8,30 @@ class TiempoCalculator {
     required int vecesporano,
     required double interes,
   }) {
-    
-    return (log(montofuturo/capital)/(log(1 + interes / vecesporano)*vecesporano));
+    // Convertir la tasa de interés a decimal si viene en porcentaje
+    double tasaDecimal = interes >= 1 ? interes / 100 : interes;
+
+    // Calcular la tasa por periodo
+    double tasaPorPeriodo = tasaDecimal / vecesporano;
+
+    // Aplicar la fórmula para calcular el tiempo
+    // t = ln(Mf/C) / [n * ln(1 + i/n)]
+    // donde n es veces por año e i es la tasa decimal anual
+    double tiempo =
+        log(montofuturo / capital) / (vecesporano * log(1 + tasaPorPeriodo));
+
+    print('Capital: $capital');
+    print('Monto Futuro: $montofuturo');
+    print('Tasa original: $interes');
+    print('Tasa decimal: $tasaDecimal');
+    print('Tasa por periodo: $tasaPorPeriodo');
+    print('Veces por año: $vecesporano');
+    print('Tiempo calculado (años): $tiempo');
+
+    return tiempo;
   }
 
- double calculateInterestRate({
+  double calculateInterestRate({
     required double futureAmount,
     required double capital,
     required DateTime startDate,
